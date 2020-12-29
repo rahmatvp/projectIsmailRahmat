@@ -99,13 +99,21 @@
             </div>
             <div class="card rounded-0" style="border: none; background-color: #091720;">
                 <div class="card-body">
-                    <a href="#" class="me-2 btn btn-primary fw-bold">PROFIL</a>
+                    <a href="#" id="tombol-ddg" class="me-2 btn btn-outline-light">PROFIL</a>
                     <a href="#" id="tombol-fetch" class="me-2 btn btn-outline-light">PERTANDINGAN</a>
                 </div>
             </div>
-            <div id="hasil-matches" class="my-3 p-3 bg-light-gradient rounded shadow-sm">
+            <div id="hasil-matches" class="my-3 p-3 bg-light-gradient rounded shadow-sm d-none">
                 <h6 class="border-bottom pb-2 mb-0">Hasil Pertandingan</h6>
                 <div id="spinner" class="d-flex justify-content-center d-none">
+                    <div class="spinner-border my-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div id="hasil-ddg" class="my-3 p-3 bg-light-gradient rounded shadow-sm d-none">
+                <h6 class="border-bottom pb-2 mb-0">Berita Terkini</h6>
+                <div id="spinner-ddg" class="d-flex justify-content-center d-none">
                     <div class="spinner-border my-3" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -150,26 +158,43 @@
 
 <script>
     const spinner = document.getElementById('spinner');
-    const hasilMatches = document.getElementById('hasil-matches');
+    const spinnerDDG = document.getElementById('spinner-ddg');
     const tombolFetch = document.getElementById('tombol-fetch');
+    const tombolDDG = document.getElementById("tombol-ddg");
+    const hasilMatches = document.getElementById('hasil-matches');
+    const hasilDDG = document.getElementById("hasil-ddg");
     const templateKartuMatch = document.getElementById("template-kartu-match");
 
-    let dataMatches;
+    let dataMatches, dataDDG;
 
     tombolFetch.addEventListener("click", function () {
         let tombolLama = this.parentElement.querySelector(".btn-primary")
-
         if (tombolLama !== this) {
+            hasilDDG.classList.add("d-none")
+            hasilMatches.classList.remove("d-none")
             this.classList.replace("btn-outline-light", "btn-primary")
             this.classList.add("fw-bold")
-            tombolLama.classList.replace("btn-primary", "btn-outline-light")
-            tombolLama.classList.remove("fw-bold")
-            !dataMatches && getMatches('http://api.football-data.org/v2/players/44/matches')
+            tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
+            tombolLama && tombolLama.classList.remove("fw-bold")
+            !dataMatches && getMatches('https://api.duckduckgo.com/?format=json&q=lionel%20messi')
         }
+    })
 
+    tombolDDG.addEventListener("click", function() {
+        let tombolLama = this.parentElement.querySelector(".btn-primary")
+        if (tombolLama !== this) {
+            hasilMatches.classList.add("d-none")
+            hasilDDG.classList.remove("d-none")
+            this.classList.replace("btn-outline-light", "btn-primary")
+            this.classList.add("fw-bold")
+            tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
+            tombolLama && tombolLama.classList.remove("fw-bold")
+            !dataDDG && getDuckDuckGo('http://api.football-data.org/v2/players/44/matches')
+        }
     })
 
     function getMatches(url) {
+        console.log("FUNGSI getMatches INVOKED")
         spinner.classList.remove("d-none")
         spinner.classList.add("d-none")
 
@@ -608,6 +633,12 @@
     //         console.log(d)
     //     })
     // };
+
+
+    function getDuckDuckGo(url) {
+        console.log("FUNGSI getDuckDUckGo INOVKED")
+        dataDDG = ["sesuatu", "yang ada dihatiku", "sesuatu"]
+    }
 </script>
 
 </html>
