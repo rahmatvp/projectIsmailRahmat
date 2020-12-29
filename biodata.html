@@ -148,13 +148,13 @@
     tombolFetch.addEventListener("click", function () {
         let tombolLama = this.parentElement.querySelector(".btn-primary")
 
-        this.classList.replace("btn-outline-light", "btn-primary")
-        this.classList.add("fw-bold")
-
-        tombolLama.classList.replace("btn-primary", "btn-outline-light")
-        tombolLama.classList.remove("fw-bold")
-
-        !dataMatches && getMatches('http://api.football-data.org/v2/players/44/matches')
+        if (tombolLama !== this) {
+            this.classList.replace("btn-outline-light", "btn-primary")
+            this.classList.add("fw-bold")
+            tombolLama.classList.replace("btn-primary", "btn-outline-light")
+            tombolLama.classList.remove("fw-bold")
+            !dataMatches && getMatches('http://api.football-data.org/v2/players/44/matches')
+        }
 
     })
 
