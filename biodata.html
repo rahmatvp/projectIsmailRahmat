@@ -6,13 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biodata Pemain</title>
     <link rel="stylesheet" href="./bootstrap.min.css">
+    <style>
+        .nomor-punggung {
+            font-size: 15rem;
+            letter-spacing: -1rem;
+            bottom: -6.3rem;
+            right: 0;
+            color: rgba(107, 176, 255, 0.5);
+        }
+
+        @media (max-width: 576px) {
+            .nomor-punggung {
+                font-size: 13rem;
+                color: rgba(107, 176, 255, 0.3);
+            }
+            .teks-kartu{
+                font-size: 0.9rem;
+            }
+            .teks-judul-kartu{
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .teks-judul-kartu{
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
     <div class="container-fluid d-flex justify-content-center">
         <div class="d-flex flex-column">
-            <div class="card bg-dark text-white rounded-0">
+            <div class="card bg-dark text-white rounded-0 teks-kartu">
                 <img src="https://www.goal.com/assets/default/ltr/img/player-information-bg.7c743dacb1.jpg"
                     class="card-img" style="height: 15rem;">
                 <div class="card-img-overlay d-flex flex-column">
@@ -21,7 +49,7 @@
                             <img src="https://secure.cache.images.core.optasports.com/soccer/players/50x50/uuid_2r4ox2h5r7doo3ys9ynm2nbo5.png"
                                 alt="">
                         </div>
-                        <h2 class="card-title align-self-center text-truncate">
+                        <h2 class="card-title align-self-center text-truncate teks-judul-kartu">
                             <span class="fw-bold">Adrian</span>
                             <span>Manalagi</span>
                         </h2>
@@ -61,8 +89,7 @@
                         </div>
                     </div>
                     <div class="ms-auto position-relative" style="z-index: 1;">
-                        <p class="position-absolute m-0 fw-bold"
-                            style="font-size: 15rem; letter-spacing: -1rem; bottom: -6.3rem; right: 0; color: rgba(107, 176, 255, 0.5);">
+                        <p class="position-absolute m-0 fw-bold nomor-punggung">
                             13
                         </p>
                     </div>
@@ -76,7 +103,7 @@
                     <a href="#" class="me-2 btn btn-outline-light">BERITA</a>
                 </div>
             </div>
-            <div id="hasil-matches" class="my-3 p-3 bg-white rounded shadow-sm">
+            <div id="hasil-matches" class="my-3 p-3 bg-light-gradient rounded shadow-sm">
                 <h6 class="border-bottom pb-2 mb-0">Hasil Pertandingan</h6>
                 <div id="spinner" class="d-flex justify-content-center d-none">
                     <div class="spinner-border my-3" role="status">
@@ -91,18 +118,21 @@
 </body>
 
 <template id="template-kartu-match">
-    <div class="d-flex text-muted pt-3">
-        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32"
-            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
-            preserveAspectRatio="xMidYMid slice" focusable="false">
-            <title>Placeholder</title>
-            <rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff"
-                dy=".3em">32x32</text>
-        </svg>
+    <div class="d-flex pt-3 border-bottom">
 
-        <p class="pb-3 mb-0 small lh-sm border-bottom">
-            <strong class="d-block text-gray-dark">competition name</strong>
-            <span>home team vs away team</span>
+        <div class="d-flex flex-column">
+            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="80" height="38"
+                xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                preserveAspectRatio="xMidYMid slice" focusable="false">
+                <rect width="100%" height="100%" fill="#007bff"></rect>
+                <text x="0.9rem" y="1.4rem" fill="white">04/04</text>
+            </svg>
+            <p class="text-wrap text-muted mb-1 mt-1" style="font-size: 0.7rem;">UEFA Champions League</p>
+        </div>
+
+        <p class="pb-3 mb-0 small lh-sm align-self-center">
+            <span class="fw-bold">competition name</span>
+            <span></span>
         </p>
     </div>
 </template>
@@ -116,8 +146,13 @@
     let dataMatches;
 
     tombolFetch.addEventListener("click", function () {
+        let tombolLama = this.parentElement.querySelector(".btn-primary")
+
         this.classList.replace("btn-outline-light", "btn-primary")
-        this.parentElement.querySelector(".btn-primary").classList.replace("btn-primary", "btn-outline-light")
+        this.classList.add("fw-bold")
+
+        tombolLama.classList.replace("btn-primary", "btn-outline-light")
+        tombolLama.classList.remove("fw-bold")
 
         !dataMatches && getMatches('http://api.football-data.org/v2/players/44/matches')
 
@@ -125,31 +160,433 @@
 
     function getMatches(url) {
         spinner.classList.remove("d-none")
-        fetch(url, {
-            method: "get"
-            , mode: 'cors'
-            , headers: {
-                'X-Auth-Token': '8a2c0fd0dc284e7a9da42ecb728cb7e0'
-            }
-        }).then(res => {
-            return res.json()
-        }).then(d => {
-            spinner.classList.add("d-none")
-            dataMatches = d.matches
+        spinner.classList.add("d-none")
 
 
-            dataMatches.forEach(el => {
-                let tmp = templateKartuMatch.content.firstElementChild.cloneNode(true);
-                let pTag = tmp.lastElementChild;
-                pTag.firstElementChild.innerHTML = el.competition.name
-                pTag.lastElementChild.innerHTML = `${el.homeTeam.name} VS ${el.awayTeam.name}`
-                hasilMatches.appendChild(tmp)
-            });
+        let d = {
+            "matches": [
+                {
+                    "id": 309719,
+                    "competition": {
+                        "id": 2019,
+                        "name": "Serie A"
+                    },
+                    "season": {
+                        "id": 638,
+                        "startDate": "2020-09-20",
+                        "endDate": "2021-05-23",
+                        "currentMatchday": 15
+                    },
+                    "utcDate": "2020-12-22T19:45:00Z",
+                    "status": "FINISHED",
+                    "matchday": 14,
+                    "stage": "REGULAR_SEASON",
+                    "group": "Regular Season",
+                    "lastUpdated": "2020-12-23T02:15:04Z",
+                    "odds": {
+                        "msg": "Activate Odds-Package in User-Panel to retrieve odds."
+                    },
+                    "score": {
+                        "winner": "AWAY_TEAM",
+                        "duration": "REGULAR",
+                        "fullTime": {
+                            "homeTeam": 0,
+                            "awayTeam": 3
+                        },
+                        "halfTime": {
+                            "homeTeam": 0,
+                            "awayTeam": 1
+                        },
+                        "extraTime": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        },
+                        "penalties": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        }
+                    },
+                    "homeTeam": {
+                        "id": 109,
+                        "name": "Juventus FC"
+                    },
+                    "awayTeam": {
+                        "id": 99,
+                        "name": "ACF Fiorentina"
+                    },
+                    "referees": [
+                        {
+                            "id": 10980,
+                            "name": "Federico La Penna",
+                            "role": "MAIN_REFEREE",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11076,
+                            "name": "Alessandro Giallatini",
+                            "role": "ASSISTANT_N1",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11001,
+                            "name": "Mauro Vivenzi",
+                            "role": "ASSISTANT_N2",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 10985,
+                            "name": "Michael Fabbri",
+                            "role": "FOURTH_OFFICIAL",
+                            "nationality": "Italy"
+                        }
+                    ]
+                },
+                {
+                    "id": 309712,
+                    "competition": {
+                        "id": 2019,
+                        "name": "Serie A"
+                    },
+                    "season": {
+                        "id": 638,
+                        "startDate": "2020-09-20",
+                        "endDate": "2021-05-23",
+                        "currentMatchday": 15
+                    },
+                    "utcDate": "2020-12-19T19:45:00Z",
+                    "status": "FINISHED",
+                    "matchday": 13,
+                    "stage": "REGULAR_SEASON",
+                    "group": "Regular Season",
+                    "lastUpdated": "2020-12-20T01:45:12Z",
+                    "odds": {
+                        "msg": "Activate Odds-Package in User-Panel to retrieve odds."
+                    },
+                    "score": {
+                        "winner": "AWAY_TEAM",
+                        "duration": "REGULAR",
+                        "fullTime": {
+                            "homeTeam": 0,
+                            "awayTeam": 4
+                        },
+                        "halfTime": {
+                            "homeTeam": 0,
+                            "awayTeam": 2
+                        },
+                        "extraTime": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        },
+                        "penalties": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        }
+                    },
+                    "homeTeam": {
+                        "id": 112,
+                        "name": "Parma Calcio 1913"
+                    },
+                    "awayTeam": {
+                        "id": 109,
+                        "name": "Juventus FC"
+                    },
+                    "referees": [
+                        {
+                            "id": 11050,
+                            "name": "Giampaolo Calvarese",
+                            "role": "MAIN_REFEREE",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11038,
+                            "name": "Lucas Mondin",
+                            "role": "ASSISTANT_N1",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11089,
+                            "name": "Giovanni Baccini",
+                            "role": "ASSISTANT_N2",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 57794,
+                            "name": "Alessandro Prontera",
+                            "role": "FOURTH_OFFICIAL",
+                            "nationality": "Italy"
+                        }
+                    ]
+                },
+                {
+                    "id": 309699,
+                    "competition": {
+                        "id": 2019,
+                        "name": "Serie A"
+                    },
+                    "season": {
+                        "id": 638,
+                        "startDate": "2020-09-20",
+                        "endDate": "2021-05-23",
+                        "currentMatchday": 15
+                    },
+                    "utcDate": "2020-12-16T17:30:00Z",
+                    "status": "FINISHED",
+                    "matchday": 12,
+                    "stage": "REGULAR_SEASON",
+                    "group": "Regular Season",
+                    "lastUpdated": "2020-12-17T00:45:06Z",
+                    "odds": {
+                        "msg": "Activate Odds-Package in User-Panel to retrieve odds."
+                    },
+                    "score": {
+                        "winner": "DRAW",
+                        "duration": "REGULAR",
+                        "fullTime": {
+                            "homeTeam": 1,
+                            "awayTeam": 1
+                        },
+                        "halfTime": {
+                            "homeTeam": 1,
+                            "awayTeam": 0
+                        },
+                        "extraTime": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        },
+                        "penalties": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        }
+                    },
+                    "homeTeam": {
+                        "id": 109,
+                        "name": "Juventus FC"
+                    },
+                    "awayTeam": {
+                        "id": 102,
+                        "name": "Atalanta BC"
+                    },
+                    "referees": [
+                        {
+                            "id": 11065,
+                            "name": "Daniele Doveri",
+                            "role": "MAIN_REFEREE",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11069,
+                            "name": "Fabiano Preti",
+                            "role": "ASSISTANT_N1",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11070,
+                            "name": "Stefano Liberti",
+                            "role": "ASSISTANT_N2",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11043,
+                            "name": "Maurizio Mariani",
+                            "role": "FOURTH_OFFICIAL",
+                            "nationality": "Italy"
+                        }
+                    ]
+                },
+                {
+                    "id": 309696,
+                    "competition": {
+                        "id": 2019,
+                        "name": "Serie A"
+                    },
+                    "season": {
+                        "id": 638,
+                        "startDate": "2020-09-20",
+                        "endDate": "2021-05-23",
+                        "currentMatchday": 15
+                    },
+                    "utcDate": "2020-12-13T17:00:00Z",
+                    "status": "FINISHED",
+                    "matchday": 11,
+                    "stage": "REGULAR_SEASON",
+                    "group": "Regular Season",
+                    "lastUpdated": "2020-12-14T17:20:09Z",
+                    "odds": {
+                        "msg": "Activate Odds-Package in User-Panel to retrieve odds."
+                    },
+                    "score": {
+                        "winner": "AWAY_TEAM",
+                        "duration": "REGULAR",
+                        "fullTime": {
+                            "homeTeam": 1,
+                            "awayTeam": 3
+                        },
+                        "halfTime": {
+                            "homeTeam": 0,
+                            "awayTeam": 0
+                        },
+                        "extraTime": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        },
+                        "penalties": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        }
+                    },
+                    "homeTeam": {
+                        "id": 107,
+                        "name": "Genoa CFC"
+                    },
+                    "awayTeam": {
+                        "id": 109,
+                        "name": "Juventus FC"
+                    },
+                    "referees": [
+                        {
+                            "id": 11060,
+                            "name": "Marco Di Bello",
+                            "role": "MAIN_REFEREE",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11080,
+                            "name": "Sergio Ranghetti",
+                            "role": "ASSISTANT_N1",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11066,
+                            "name": "Alessandro Lo Cicero",
+                            "role": "ASSISTANT_N2",
+                            "nationality": "Italy"
+                        },
+                        {
+                            "id": 11112,
+                            "name": "Juan Sacchi",
+                            "role": "FOURTH_OFFICIAL",
+                            "nationality": "Italy"
+                        }
+                    ]
+                },
+                {
+                    "id": 313243,
+                    "competition": {
+                        "id": 2001,
+                        "name": "UEFA Champions League"
+                    },
+                    "season": {
+                        "id": 642,
+                        "startDate": "2020-08-08",
+                        "endDate": "2021-05-29",
+                        "currentMatchday": 6
+                    },
+                    "utcDate": "2020-12-08T20:00:00Z",
+                    "status": "FINISHED",
+                    "matchday": 6,
+                    "stage": "GROUP_STAGE",
+                    "group": "Group G",
+                    "lastUpdated": "2020-12-09T03:15:08Z",
+                    "odds": {
+                        "msg": "Activate Odds-Package in User-Panel to retrieve odds."
+                    },
+                    "score": {
+                        "winner": "AWAY_TEAM",
+                        "duration": "REGULAR",
+                        "fullTime": {
+                            "homeTeam": 0,
+                            "awayTeam": 3
+                        },
+                        "halfTime": {
+                            "homeTeam": 0,
+                            "awayTeam": 2
+                        },
+                        "extraTime": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        },
+                        "penalties": {
+                            "homeTeam": null,
+                            "awayTeam": null
+                        }
+                    },
+                    "homeTeam": {
+                        "id": 81,
+                        "name": "FC Barcelona"
+                    },
+                    "awayTeam": {
+                        "id": 109,
+                        "name": "Juventus FC"
+                    },
+                    "referees": [
+                        {
+                            "id": 43943,
+                            "name": "Tobias Stieler",
+                            "role": "MAIN_REFEREE",
+                            "nationality": "Germany"
+                        },
+                        {
+                            "id": 9569,
+                            "name": "Mike Pickel",
+                            "role": "ASSISTANT_N1",
+                            "nationality": "Germany"
+                        },
+                        {
+                            "id": 15747,
+                            "name": "Christian Gittelmann",
+                            "role": "ASSISTANT_N2",
+                            "nationality": "Germany"
+                        },
+                        {
+                            "id": 43858,
+                            "name": "Serdar Gözübüyük",
+                            "role": "FOURTH_OFFICIAL",
+                            "nationality": "Netherlands"
+                        }
+                    ]
+                }]
+        }
 
 
-            console.log(d)
-        })
+        dataMatches = d.matches
+
+        dataMatches.forEach(el => {
+            let tmp = templateKartuMatch.content.firstElementChild.cloneNode(true);
+            let pTag = tmp.lastElementChild;
+            pTag.firstElementChild.innerHTML = el.competition.name
+            pTag.lastElementChild.innerHTML = `${el.homeTeam.name} VS ${el.awayTeam.name}`
+            hasilMatches.appendChild(tmp)
+        });
+
     };
+
+    // function getMatches(url) {
+    //     spinner.classList.remove("d-none")
+    //     fetch(url, {
+    //         method: "get"
+    //         , mode: 'cors'
+    //         , headers: {
+    //             'X-Auth-Token': '8a2c0fd0dc284e7a9da42ecb728cb7e0'
+    //         }
+    //     }).then(res => {
+    //         return res.json()
+    //     }).then(d => {
+    //         spinner.classList.add("d-none")
+    //         dataMatches = d.matches
+
+
+    //         dataMatches.forEach(el => {
+    //             let tmp = templateKartuMatch.content.firstElementChild.cloneNode(true);
+    //             let pTag = tmp.lastElementChild;
+    //             pTag.firstElementChild.innerHTML = el.competition.name
+    //             pTag.lastElementChild.innerHTML = `${el.homeTeam.name} VS ${el.awayTeam.name}`
+    //             hasilMatches.appendChild(tmp)
+    //         });
+
+
+    //         console.log(d)
+    //     })
+    // };
 </script>
 
 </html>
