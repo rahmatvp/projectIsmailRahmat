@@ -20,16 +20,18 @@
                 font-size: 13rem;
                 color: rgba(107, 176, 255, 0.3);
             }
-            .teks-kartu{
+
+            .teks-kartu {
                 font-size: 0.9rem;
             }
-            .teks-judul-kartu{
+
+            .teks-judul-kartu {
                 font-size: 1.2rem;
             }
         }
 
         @media (max-width: 360px) {
-            .teks-judul-kartu{
+            .teks-judul-kartu {
                 font-size: 1rem;
             }
         }
@@ -98,9 +100,7 @@
             <div class="card rounded-0" style="border: none; background-color: #091720;">
                 <div class="card-body">
                     <a href="#" class="me-2 btn btn-primary fw-bold">PROFIL</a>
-                    <a href="#" id="tombol-fetch" class="me-2 btn btn-outline-light">KARIR</a>
-                    <a href="#" class="me-2 btn btn-outline-light">PERTANDINGAN</a>
-                    <a href="#" class="me-2 btn btn-outline-light">BERITA</a>
+                    <a href="#" id="tombol-fetch" class="me-2 btn btn-outline-light">PERTANDINGAN</a>
                 </div>
             </div>
             <div id="hasil-matches" class="my-3 p-3 bg-light-gradient rounded shadow-sm">
@@ -118,9 +118,8 @@
 </body>
 
 <template id="template-kartu-match">
-    <div class="d-flex pt-3 border-bottom">
-
-        <div class="d-flex flex-column">
+    <div class="d-flex pb-1 pt-1 border-bottom flex-wrap">
+        <div class="d-flex flex-column pt-2">
             <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="80" height="38"
                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
                 preserveAspectRatio="xMidYMid slice" focusable="false">
@@ -129,11 +128,23 @@
             </svg>
             <p class="text-wrap text-muted mb-1 mt-1" style="font-size: 0.7rem;">UEFA Champions League</p>
         </div>
-
-        <p class="pb-3 mb-0 small lh-sm align-self-center">
-            <span class="fw-bold">competition name</span>
-            <span></span>
-        </p>
+        <div class="py-0 d-flex flex-grow-1 justify-content-evenly">
+            <div class="container">
+                <div class="row">
+                    <div class="col d-flex justify-content-end">
+                        <span class="small me-3">Home Team</span>
+                        <span class="small">Home Team Score</span>
+                    </div>
+                    <div class="col-1 d-flex justify-content-center">
+                        <span class="small"> - </span>
+                    </div>
+                    <div class="col d-flex">
+                        <span class="small me-3">Away Team Score</span>
+                        <span class="small me-3">Away Team</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -552,9 +563,19 @@
 
         dataMatches.forEach(el => {
             let tmp = templateKartuMatch.content.firstElementChild.cloneNode(true);
-            let pTag = tmp.lastElementChild;
-            pTag.firstElementChild.innerHTML = el.competition.name
-            pTag.lastElementChild.innerHTML = `${el.homeTeam.name} VS ${el.awayTeam.name}`
+            let spans = tmp.lastElementChild.querySelectorAll('.small');
+            console.log(spans)
+            let arr = [
+                el.homeTeam.name
+                , el.score.fullTime.homeTeam
+                , "-"
+                , el.score.fullTime.awayTeam
+                , el.awayTeam.name
+            ]
+            spans.forEach( (e, i) => {
+                e.innerHTML = arr[i]
+                console.log(arr[i])
+            })
             hasilMatches.appendChild(tmp)
         });
 
