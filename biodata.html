@@ -302,6 +302,13 @@
                 spans.forEach((e, i) => {
                     e.innerHTML = arr[i]
                 })
+                if (el.score.winner === "HOME_TEAM") {
+                    spans[0].classList.add("fw-bold")
+                    spans[1].classList.add("fw-bold")
+                } else {
+                    spans[3].classList.add("fw-bold")
+                    spans[4].classList.add("fw-bold")
+                }
                 let tgl = new Date(el.utcDate)
                 tmp.querySelector("#date-berubah").innerHTML = `${tgl.getDate()}/${tgl.getMonth() + 1}`
                 hasilMatches.appendChild(tmp)
