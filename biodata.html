@@ -41,7 +41,12 @@
 <body>
 
     <div class="container-fluid d-flex justify-content-center">
-        <div class="d-flex flex-column">
+        <div id="spinner-utama" class="d-flex justify-content-center">
+            <div class="spinner-border my-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div class="d-flex flex-column d-none">
             <div class="card bg-dark text-white rounded-0 teks-kartu">
                 <img src="https://www.goal.com/assets/default/ltr/img/player-information-bg.7c743dacb1.jpg"
                     class="card-img" style="height: 15rem;">
@@ -52,8 +57,8 @@
                                 alt="">
                         </div>
                         <h2 class="card-title align-self-center text-truncate teks-judul-kartu">
-                            <span class="fw-bold">Adrian</span>
-                            <span>Manalagi</span>
+                            <span class="fw-bold perlu-berubah">Adrian</span>
+                            <span class="perlu-berubah">Manalagi</span>
                         </h2>
                         <div class="flex-shrink-1 ms-auto d-flex flex-row">
                             <div class="rounded-circle overflow-hidden border d-flex justify-content-center align-items-center bg-light"
@@ -71,27 +76,30 @@
                             </div>
                         </div>
                     </div>
-                    <p class="card-text" style="z-index: 9;"><span class="fw-bold">Kiper:</span> Liverpool FC
-                        /
-                        Spanyol</p>
-                    <p class="card-text" style="z-index: 9;"><span class="fw-bold">TTL:</span> Jan 03, 1987
-                        (Sevilla, Spanyol)</p>
+                    <p class="card-text" style="z-index: 9;">
+                        <span class="fw-bold">Posisi:</span>
+                        <span class="perlu-berubah">Attacker</span>
+                    </p>
+                    <p class="card-text" style="z-index: 9;">
+                        <span class="fw-bold">TTL:</span>
+                        <span class="perlu-berubah">Jan 03, 1987 (Sevilla, Spanyol)</span>
+                    </p>
                     <div class="d-flex" style="z-index: 9;">
                         <div class="d-flex flex-column me-5">
                             <p class="mb-0 fw-bold">Tinggi:</p>
-                            <p>150cm</p>
+                            <p>165cm</p>
                         </div>
                         <div class="d-flex flex-column me-5">
                             <p class="mb-0 fw-bold">Berat:</p>
-                            <p>80kg</p>
+                            <p>88kg</p>
                         </div>
                         <div class="d-flex flex-column me-5">
-                            <p class="mb-0 fw-bold">Kaki:</p>
-                            <p>kanan</p>
+                            <p class="mb-0 fw-bold">Nationality:</p>
+                            <p class="perlu-berubah">kanan</p>
                         </div>
                     </div>
                     <div class="ms-auto position-relative" style="z-index: 1;">
-                        <p class="position-absolute m-0 fw-bold nomor-punggung">
+                        <p class="position-absolute m-0 fw-bold nomor-punggung perlu-berubah">
                             13
                         </p>
                     </div>
@@ -159,7 +167,8 @@
 <script>
     const spinner = document.getElementById('spinner');
     const spinnerDDG = document.getElementById('spinner-ddg');
-    const tombolFetch = document.getElementById('tombol-fetch');
+    const spinnerUtama = document.getElementById('spinner-utama');
+    const tombolMatches = document.getElementById('tombol-fetch');
     const tombolDDG = document.getElementById("tombol-ddg");
     const hasilMatches = document.getElementById('hasil-matches');
     const hasilDDG = document.getElementById("hasil-ddg");
@@ -167,7 +176,11 @@
 
     let dataMatches, dataDDG;
 
-    tombolFetch.addEventListener("click", function () {
+    let playerID = getUrlVars()["id"]
+
+    playerID && getPlayer(playerID)
+
+    tombolMatches.addEventListener("click", function () {
         let tombolLama = this.parentElement.querySelector(".btn-primary")
         if (tombolLama !== this) {
             hasilDDG.classList.add("d-none")
@@ -180,7 +193,7 @@
         }
     })
 
-    tombolDDG.addEventListener("click", function() {
+    tombolDDG.addEventListener("click", function () {
         let tombolLama = this.parentElement.querySelector(".btn-primary")
         if (tombolLama !== this) {
             hasilMatches.classList.add("d-none")
@@ -192,6 +205,50 @@
             !dataDDG && getDuckDuckGo('http://api.football-data.org/v2/players/44/matches')
         }
     })
+
+    function getUrlVars() {
+        let vars = {};
+        let parts = window.location.href.replace(/[?&#]+([^=&#]+)=([^&#]*)/gi, function (m, key, value) {
+            vars[key] = value;
+        });
+        return vars;
+    }
+
+    function getPlayer(playerID) {
+        let perluBerubah = document.querySelectorAll(".perlu-berubah")
+
+        fetch(`http://api.football-data.org/v2/players/${playerID}`, {
+            method: "get"
+            , mode: 'cors'
+            , headers: {
+                'X-Auth-Token': '8a2c0fd0dc284e7a9da42ecb728cb7e0'
+            }
+        }).then(res => {
+            return res.json()
+        }).then(d => {
+
+            let arr = [
+                d.firstName
+                , d.lastName
+                , d.position
+                , `${d.dateOfBirth} (${d.countryOfBirth})`
+                , d.nationality
+                , d.id
+            ]
+
+
+            perluBerubah.forEach((elm, idx) => {
+                elm.innerHTML = arr[idx]
+            })
+
+            console.log(arr)
+
+            console.log(perluBerubah)
+
+            spinnerUtama.classList.add("d-none")
+            spinnerUtama.nextElementSibling.classList.remove("d-none")
+        })
+    }
 
     function getMatches(url) {
         console.log("FUNGSI getMatches INVOKED")
@@ -597,7 +654,7 @@
                 , el.score.fullTime.awayTeam
                 , el.awayTeam.name
             ]
-            spans.forEach( (e, i) => {
+            spans.forEach((e, i) => {
                 e.innerHTML = arr[i]
                 console.log(arr[i])
             })
