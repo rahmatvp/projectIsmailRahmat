@@ -316,6 +316,7 @@
                 }
                 let tgl = new Date(el.utcDate)
                 tmp.querySelector("#date-berubah").innerHTML = `${tgl.getDate()}/${tgl.getMonth() + 1}`
+                tmp.querySelector(".text-wrap.text-muted").innerHTML = el.competition.name
                 hasilMatches.appendChild(tmp)
             });
             spinner.classList.replace("d-flex", "d-none")
