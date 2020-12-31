@@ -184,6 +184,11 @@
     const templateKartuMatch = document.getElementById("template-kartu-match");
     const templateKartuWiki = document.getElementById("template-kartu-wiki")
 
+    const PLACEHOLDERIMG = "https://i.pinimg.com/originals/2c/02/c2/2c02c2325982d8d9eaade2d7456424a3.png"
+    const URLWK = "https://en.wikipedia.org/"
+    const URLFD = "http://api.football-data.org/v2"
+    const TOKENFD = '8a2c0fd0dc284e7a9da42ecb728cb7e0'
+
     let dataMatches, dataWiki, searchWiki;
 
     let urlParams = getUrlVars();
@@ -204,7 +209,7 @@
             this.classList.add("font-weight-bold")
             tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
             tombolLama && tombolLama.classList.remove("font-weight-bold")
-            !dataMatches && getMatches(`http://api.football-data.org/v2/players/${playerID}/matches`)
+            !dataMatches && getMatches(`${URLFD}/players/${playerID}/matches`)
         }
     })
 
@@ -217,7 +222,7 @@
             this.classList.add("font-weight-bold")
             tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
             tombolLama && tombolLama.classList.remove("font-weight-bold")
-            !dataWiki && getWiki(`https://en.wikipedia.org/w/rest.php/v1/search/page?q=${searchWiki}&limit=5`)
+            !dataWiki && getWiki(`${URLWK}w/rest.php/v1/search/page?q=${searchWiki}&limit=5`)
         }
     })
 
@@ -230,7 +235,7 @@
     }
 
     function getBendera(negara) {
-        fetch(`https://en.wikipedia.org/w/rest.php/v1/search/page?q=${negara}&limit=1`, {
+        fetch(`${URLWK}w/rest.php/v1/search/page?q=${negara}&limit=1`, {
             method: 'get'
             , mode: 'cors'
         }).then(res => {
@@ -245,11 +250,11 @@
     function getPlayer(playerID) {
         let perluBerubah = document.querySelectorAll(".perlu-berubah")
 
-        fetch(`http://api.football-data.org/v2/players/${playerID}`, {
+        fetch(`${URLFD}/players/${playerID}`, {
             method: "get"
             , mode: 'cors'
             , headers: {
-                'X-Auth-Token': '8a2c0fd0dc284e7a9da42ecb728cb7e0'
+                'X-Auth-Token': TOKENFD
             }
         }).then(res => {
             return res.json()
@@ -283,7 +288,7 @@
             method: "get"
             , mode: 'cors'
             , headers: {
-                'X-Auth-Token': '8a2c0fd0dc284e7a9da42ecb728cb7e0'
+                'X-Auth-Token': TOKENFD
             }
         }).then(res => {
             return res.json()
@@ -328,8 +333,8 @@
             dataWiki = d.pages
             dataWiki.forEach((elm, idx) => {
                 let tmp = templateKartuWiki.content.firstElementChild.cloneNode(true);
-                tmp.querySelector("#excerpt").innerHTML = `${elm.excerpt}... <a href="https://en.wikipedia.org/wiki/${elm.key}">Wikipedia</a>`
-                tmp.querySelector("#thumb").src = elm.thumbnail ? elm.thumbnail.url : 'https://i.pinimg.com/originals/2c/02/c2/2c02c2325982d8d9eaade2d7456424a3.png';
+                tmp.querySelector("#excerpt").innerHTML = `${elm.excerpt}... <a href="${URLWK}wiki/${elm.key}">Wikipedia</a>`
+                tmp.querySelector("#thumb").src = elm.thumbnail ? elm.thumbnail.url : PLACEHOLDERIMG;
                 hasilWiki.appendChild(tmp)
             })
             spinnerWiki.classList.replace("d-flex", "d-none")
