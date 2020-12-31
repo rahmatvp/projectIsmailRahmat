@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
 
-.header {
+.blue {
   background-color: #081f2c !important;
 }
 
@@ -15,4 +15,15 @@ h1.text {
     font-weight: lighter;
     color: #dbaa17ce !important;
   }
+  
+  body{
+    margin-top: 5%;
+    margin-bottom: 2%;
+  }
 
+header
+{
+  margin-top: 0px;
+  padding-top: 0px;
+}
+  
