@@ -118,13 +118,13 @@ url: 'http://api.football-data.org/v2/competitions', -->
         url: `http://api.football-data.org/v2/teams/${klubId}`,
         dataType: 'JSON',
         type: 'GET',
-        success: function ({ name,squad }) {
+        success: function ({ name,squad,crestUrl }) {
 
-            document.getElementById('namaKlub').innerHTML = name  
+            $('#namaKlub').html(name)  
 
             let htmlContent = ''
             squad.forEach(element => {
-                htmlContent += ` <a href ="biodata.html?id=${element.id}">
+                htmlContent += ` <a href ="biodata.html?id=${element.id}&${crestUrl}">
                                   <div class="col-md">
                                     <div class="card">
                                         <img src="assets/img/Icon.png " class="card-img-top imgPemain" alt="Gambar Pemain">
@@ -139,7 +139,7 @@ url: 'http://api.football-data.org/v2/competitions', -->
                                 </a>`
             });
 
-            document.getElementById('pemain').innerHTML = htmlContent
+            $('#pemain').html(htmlContent)
         }
     });
 </script>
