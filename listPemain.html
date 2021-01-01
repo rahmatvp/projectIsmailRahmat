@@ -55,52 +55,39 @@
     <div class="container p-1">
         <div class="row">
             <div class="col-md-12 blue text-light mt-3 fs-4">
-                <h3 class="p-2" style="font-family: audiowide;">NAMA KLUB</h3>
+                <h3 class="p-2" style="font-family: audiowide;" id="namaKlub">NAMA KLUB</h3>
             </div>
         </div>
         <div class="h4 mt-4 text-center" style="font-family: audiowide;">Squad</div>
         <div class="titlesquad"></div>
 
-        <div id="posisi">
-            <div class="blue mt-2">
-                <h5 class="text-light m-2 p-2">POSITION</h5>
-            </div>
-        </div>
-        <div class="card">
-            <div class="row row-cols-1 row-cols-md-5 g-4 p-2">
-                <div class="col-md">
-                    <div class="card">
-                        <img src="assets/img/Icon.png " class="card-img-top imgPemain" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">Nama Pemain</h5>
-                            <!-- <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="card">
-                        <img src="assets/img/Icon.png" class="card-img-top imgPemain" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">Nama Pemain</h5>
-                            <!-- <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="card">
-                        <img src="assets/img/Icon.png" class="card-img-top imgPemain" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">Nama Pemain</h5>
-                            <!-- <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p> -->
+        <div class="p-2">
+            <div class="card">
+                <div class="row row-cols-1 row-cols-md-4 g-4 p-2" id="pemain">
+                    <div class="col-md">
+                        <div class="card">
+                            <img src="assets/img/Icon.png " class="card-img-top imgPemain" alt="Gambar Pemain">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Nama Pemain</h5>
+                                <div class="blue mt-2">
+                                    <h5 class="text-light m-2 p-2 text-center">Posisi</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </div>
 
+
+    <footer>
+        <div class="container-fluid">
+           <div class="row">
+               <div class="col-md-12 blue">ha</div>
+           </div>
+        </div>
+    </footer>
 </body>
 
 
@@ -122,67 +109,37 @@ url: 'http://api.football-data.org/v2/competitions', -->
 
 <script>
 
+    const URL = window.location.search
+    const urlparams = new URLSearchParams(URL)
+    const klubId = urlparams.get("id")
+
     $.ajax({
         headers: { 'X-Auth-Token': '128ecf8248de4be8a6e6178a4548b3a4' },
-        url: "http://api.football-data.org/v2/teams/18",
+        url: `http://api.football-data.org/v2/teams/${klubId}`,
         dataType: 'JSON',
         type: 'GET',
-        success: function (squad) {
+        success: function ({ name,squad }) {
 
-            let squadteam = JSON.stringify(squad['squad']);
-            let jsonsquad = JSON.parse(squadteam);
+            document.getElementById('namaKlub').innerHTML = name  
 
-            // console.log(jsonsquad)
-
-            //let htmlContent = ''
-            var objctGroupByposisi = []
-            for (const key in jsonsquad) {
-                var posisi = jsonsquad[key].position;
-                if (!objctGroupByposisi[posisi]) {
-                    objctGroupByposisi[posisi] = [];
-                }
-
-                //htmlContent = `${objctGroupByposisi[posisi][1][position]}` 
-                objctGroupByposisi[posisi].push(jsonsquad[key]);
-                // console.log(jsonsquad[key])
-            }
-
-            console.log(objctGroupByposisi)
-
-            var hitung = 0
             let htmlContent = ''
-            for (const key in objctGroupByposisi) {
-                if (objctGroupByposisi[key]) {
-                    hitung++
+            squad.forEach(element => {
+                htmlContent += ` <a href ="biodata.html?id=${element.id}">
+                                  <div class="col-md">
+                                    <div class="card">
+                                        <img src="assets/img/Icon.png " class="card-img-top imgPemain" alt="Gambar Pemain">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">${element.name}</h5>
+                                            <div class="blue mt-2">
+                                                <h5 class="text-light m-2 p-2 text-center">${element.position}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>`
+            });
 
-                     let namaPosisi = key; 
-
-                     console.log(namaPosisi)
-                    for (let index = 0; index < objctGroupByposisi[key].length; index++) {
-
-                        //console.log(index)
-
-                    //     htmlContent = ` <div class="blue mt-2">
-                    //                     <h5 class="text-light m-2 p-2">${namaPosisi}</h5>
-                    //                 </div>`
-                     }
-
-                }
-
-                document.getElementById('posisi').innerHTML = htmlContent
-            }
-            //console.log(hitung)
-
-            /*  let htmlContent=''
-              for (let index = 1; index <= hitung; index++) {
-                  
-                  // console.log(objctGroupByposisi[index].)
-               
-              }*/
-
-            // console.log(objctGroupByposisi[0].length)
-            // console.log(objctGroupByposisi["Attacker"][0])
-
+            document.getElementById('pemain').innerHTML = htmlContent
         }
     });
 </script>
