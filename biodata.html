@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biodata Pemain</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <style>
+        .nomor-punggung {
+            font-size: 15rem;
+            letter-spacing: -1rem;
+            bottom: -6.3rem;
+            right: 0;
+            color: rgba(107, 176, 255, 0.5);
+        }
+
+        @media (max-width: 576px) {
+            .nomor-punggung {
+                font-size: 13rem;
+                color: rgba(107, 176, 255, 0.3);
+            }
+
+            .teks-kartu {
+                font-size: 0.9rem;
+            }
+
+            .teks-judul-kartu {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .teks-judul-kartu {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid d-flex justify-content-center">
+        <div id="spinner-utama" class="d-flex justify-content-center">
+            <div class="spinner-border my-3" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="flex-column d-none">
+            <div class="card bg-dark text-white rounded-0 teks-kartu">
+                <img src="https://www.goal.com/assets/default/ltr/img/player-information-bg.7c743dacb1.jpg"
+                    class="card-img" style="height: 15rem;">
+                <div class="card-img-overlay d-flex flex-column">
+                    <div class="d-flex mb-3">
+                        <div class="rounded-circle overflow-hidden border mr-3" style="min-width: 50px;">
+                            <img src="https://secure.cache.images.core.optasports.com/soccer/players/50x50/uuid_9gdocwx006j6wyz4mnhzgzydx.png"
+                                alt="">
+                        </div>
+                        <h2 class="card-title mb-0 align-self-center text-truncate teks-judul-kartu">
+                            <span class="font-weight-bold perlu-berubah">Adrian</span>
+                            <span class="perlu-berubah">Manalagi</span>
+                        </h2>
+                        <div class="flex-shrink-1 ml-auto d-flex flex-row">
+                            <div class="rounded-circle overflow-hidden border d-flex justify-content-center align-items-center bg-light"
+                                style=" margin-right: -15px; z-index: 2; width: 40px; height: 40px;">
+                                <img id="klub" loading="lazy" alt="Liverpool FC" class="p0c-competition-tables__crest"
+                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3C/svg%3E"
+                                    srcset="https://secure.cache.images.core.optasports.com/soccer/teams/30x30/uuid_c8h9bw1l82s06h77xxrelzhur.png, https://secure.cache.images.core.optasports.com/soccer/teams/75x75/uuid_c8h9bw1l82s06h77xxrelzhur.png 2x"
+                                    height="30">
+                            </div>
+                            <div class="rounded-circle overflow-hidden border" style="width: 40px; height: 40px;"">
+                                <img id="negara" loading=" lazy" class="flag"
+                                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3C/svg%3E"
+                                srcset="https://upload.wikimedia.org/wikipedia/commons/4/41/Flag_of_Austria.svg"
+                                height="40">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="card-text" style="z-index: 9;">
+                        <span class="font-weight-bold">Posisi:</span>
+                        <span class="perlu-berubah">Attacker</span>
+                    </p>
+                    <p class="card-text" style="z-index: 9;">
+                        <span class="font-weight-bold">TTL:</span>
+                        <span class="perlu-berubah">Jan 03, 1987 (Sevilla, Spanyol)</span>
+                    </p>
+                    <div class="d-flex" style="z-index: 9;">
+                        <div class="d-flex flex-column mr-3 mr-sm-5">
+                            <p class="mb-0 font-weight-bold">Tinggi:</p>
+                            <p>165cm</p>
+                        </div>
+                        <div class="d-flex flex-column mr-3 mr-sm-5">
+                            <p class="mb-0 font-weight-bold">Berat:</p>
+                            <p>88kg</p>
+                        </div>
+                        <div class="d-flex flex-column mr-3 mr-sm-5">
+                            <p class="mb-0 font-weight-bold">Nationality:</p>
+                            <p class="perlu-berubah">kanan</p>
+                        </div>
+                    </div>
+                    <div class="ml-auto position-relative" style="z-index: 1;">
+                        <p class="position-absolute m-0 font-weight-bold nomor-punggung perlu-berubah">
+                            13
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card rounded-0" style="border: none; background-color: #091720; z-index: 12;">
+                <div class="card-body">
+                    <a href="#" id="tombol-ddg" class="mr-2 btn btn-outline-light btn-sm">BERITA</a>
+                    <a href="#" id="tombol-fetch" class="mr-2 btn btn-outline-light btn-sm">PERTANDINGAN</a>
+                </div>
+            </div>
+            <div id="hasil-matches" class="my-3 p-3 bg-light-gradient rounded shadow-sm d-none">
+                <h6 class="border-bottom pb-2 mb-0">Hasil Pertandingan</h6>
+                <div id="spinner" class="justify-content-center d-none">
+                    <div class="spinner-border my-3" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div id="hasil-wiki" class="my-3 p-3 bg-light-gradient rounded shadow-sm d-none">
+                <h6 class="border-bottom pb-2 mb-0">Berita Terkini</h6>
+                <div id="spinner-wiki" class="justify-content-center d-none">
+                    <div class="spinner-border my-3" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+<template id="template-kartu-match">
+    <div class="d-flex pb-1 pt-1 border-bottom flex-wrap">
+        <div class="d-flex flex-column pt-2" style="flex-basis: 150px;">
+            <svg class="bd-placeholder-img flex-shrink-0 mr-2 rounded" width="80" height="38"
+                xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                preserveAspectRatio="xMidYMid slice" focusable="false">
+                <rect width="100%" height="100%" fill="#007bff"></rect>
+                <text x="0.9rem" y="1.4rem" fill="white" id="date-berubah">04/04</text>
+            </svg>
+            <p class="text-wrap text-muted mb-1 mt-1" style="font-size: 0.7rem;">UEFA Champions League</p>
+        </div>
+        <div class="py-0 d-flex flex-grow-1 justify-content-evenly">
+            <div class="container">
+                <div class="row">
+                    <div class="col d-flex justify-content-end">
+                        <span class="small mr-3">Home Team</span>
+                        <span class="small">Home Team Score</span>
+                    </div>
+                    <div class="col-1 d-flex justify-content-center">
+                        <span class="small"> - </span>
+                    </div>
+                    <div class="col d-flex">
+                        <span class="small mr-3">Away Team Score</span>
+                        <span class="small mr-3">Away Team</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="template-kartu-wiki">
+    <div class="pb-3 pb-sm-1 d-flex justify-content-center pb-1 pt-1 border-bottom flex-row flex-wrap">
+        <div class="pt-2 mb-1 d-flex justify-content-center" style="flex: 0 1 6rem;">
+            <img src="" id="thumb" class="img-thumbnail" style="max-height: 7rem;" />
+        </div>
+        <div id="excerpt" class="mr-1 mt-1" style="flex: 1 0 290px"></div>
+    </div>
+</template>
+
+<script>
+    const spinner = document.getElementById('spinner');
+    const spinnerWiki = document.getElementById('spinner-wiki');
+    const spinnerUtama = document.getElementById('spinner-utama');
+    const tombolMatches = document.getElementById('tombol-fetch');
+    const tombolDDG = document.getElementById("tombol-ddg");
+    const hasilMatches = document.getElementById('hasil-matches');
+    const hasilWiki = document.getElementById("hasil-wiki");
+    const templateKartuMatch = document.getElementById("template-kartu-match");
+    const templateKartuWiki = document.getElementById("template-kartu-wiki")
+
+    const PLACEHOLDERIMG = "https://i.pinimg.com/originals/2c/02/c2/2c02c2325982d8d9eaade2d7456424a3.png"
+    const URLWK = "https://en.wikipedia.org/"
+    const URLFD = "http://api.football-data.org/v2"
+    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
+
+    let dataMatches, dataWiki, searchWiki;
+
+    let urlParams = getUrlVars();
+    let playerID = urlParams["id"]
+    let logoKlub = urlParams["klub"]
+    let playerNationality = ""
+
+    playerID && getPlayer(playerID)
+
+    logoKlub && (document.getElementById("klub").srcset = logoKlub)
+
+    tombolMatches.addEventListener("click", function () {
+        let tombolLama = this.parentElement.querySelector(".btn-primary")
+        if (tombolLama !== this) {
+            hasilWiki.classList.add("d-none")
+            hasilMatches.classList.remove("d-none")
+            this.classList.replace("btn-outline-light", "btn-primary")
+            this.classList.add("font-weight-bold")
+            tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
+            tombolLama && tombolLama.classList.remove("font-weight-bold")
+            !dataMatches && getMatches(`${URLFD}/players/${playerID}/matches`)
+        }
+    })
+
+    tombolDDG.addEventListener("click", function () {
+        let tombolLama = this.parentElement.querySelector(".btn-primary")
+        if (tombolLama !== this) {
+            hasilMatches.classList.add("d-none")
+            hasilWiki.classList.remove("d-none")
+            this.classList.replace("btn-outline-light", "btn-primary")
+            this.classList.add("font-weight-bold")
+            tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
+            tombolLama && tombolLama.classList.remove("font-weight-bold")
+            !dataWiki && getWiki(`${URLWK}w/rest.php/v1/search/page?q=${searchWiki}&limit=5`)
+        }
+    })
+
+    function getUrlVars() {
+        let vars = {};
+        let parts = window.location.href.replace(/[?&#]+([^=&#]+)=([^&#]*)/gi, function (m, key, value) {
+            vars[key] = value;
+        });
+        return vars;
+    }
+
+    function getBendera(negara) {
+        fetch(`${URLWK}w/rest.php/v1/search/page?q=${negara}&limit=1`, {
+            method: 'get'
+            , mode: 'cors'
+        }).then(res => {
+            return res.json()
+        }).then(d => {
+            let dat = d.pages[0].thumbnail
+            let url = dat ? dat.url : null
+            document.getElementById("negara").srcset = url
+        })
+    }
+
+    function getPlayer(playerID) {
+        let perluBerubah = document.querySelectorAll(".perlu-berubah")
+
+        fetch(`${URLFD}/players/${playerID}`, {
+            method: "get"
+            , mode: 'cors'
+            , headers: {
+                'X-Auth-Token': TOKENFD
+            }
+        }).then(res => {
+            return res.json()
+        }).then(d => {
+
+            let arr = [
+                d.firstName
+                , d.lastName
+                , d.position
+                , `${d.dateOfBirth} (${d.countryOfBirth})`
+                , d.nationality
+                , d.shirtNumber ? d.shirtNumber : d.id
+            ]
+
+            searchWiki = d.name;
+            playerNationality = d.nationality
+            getBendera(playerNationality)
+
+            perluBerubah.forEach((elm, idx) => {
+                elm.innerHTML = arr[idx]
+            })
+
+            spinnerUtama.classList.replace("d-flex", "d-none")
+            spinnerUtama.nextElementSibling.classList.replace("d-none", "d-flex")
+        })
+    }
+
+    function getMatches(url) {
+        spinner.classList.replace("d-none", "d-flex")
+        fetch(url, {
+            method: "get"
+            , mode: 'cors'
+            , headers: {
+                'X-Auth-Token': TOKENFD
+            }
+        }).then(res => {
+            return res.json()
+        }).then(d => {
+            dataMatches = d.matches
+            dataMatches.forEach(el => {
+                let tmp = templateKartuMatch.content.firstElementChild.cloneNode(true);
+                let spans = tmp.lastElementChild.querySelectorAll('.small');
+                let arr = [
+                    el.homeTeam.name
+                    , el.score.fullTime.homeTeam
+                    , "-"
+                    , el.score.fullTime.awayTeam
+                    , el.awayTeam.name
+                ]
+                spans.forEach((e, i) => {
+                    e.innerHTML = arr[i]
+                })
+                if (el.score.winner === "HOME_TEAM") {
+                    spans[0].classList.add("font-weight-bold")
+                    spans[1].classList.add("font-weight-bold")
+                } else {
+                    spans[3].classList.add("font-weight-bold")
+                    spans[4].classList.add("font-weight-bold")
+                }
+                let tgl = new Date(el.utcDate)
+                tmp.querySelector("#date-berubah").innerHTML = `${tgl.getDate()}/${tgl.getMonth() + 1}`
+                tmp.querySelector(".text-wrap.text-muted").innerHTML = el.competition.name
+                hasilMatches.appendChild(tmp)
+            });
+            spinner.classList.replace("d-flex", "d-none")
+        })
+    };
+
+    function getWiki(url) {
+        spinnerWiki.classList.replace("d-none", "d-flex")
+        fetch(url, {
+            method: "get"
+            , mode: 'cors'
+        }).then(res => {
+            return res.json()
+        }).then(d => {
+            dataWiki = d.pages
+            dataWiki.forEach((elm, idx) => {
+                let tmp = templateKartuWiki.content.firstElementChild.cloneNode(true);
+                tmp.querySelector("#excerpt").innerHTML = `${elm.excerpt}... <a href="${URLWK}wiki/${elm.key}">Wikipedia</a>`
+                tmp.querySelector("#thumb").src = elm.thumbnail ? elm.thumbnail.url : PLACEHOLDERIMG;
+                hasilWiki.appendChild(tmp)
+            })
+            spinnerWiki.classList.replace("d-flex", "d-none")
+        })
+    }
+</script>
+
+</html>
