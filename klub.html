@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klub Bola</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/style/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top blue p-3 ">
+        <a class="navbar-brand text" href="#">
+            <h2>SoccerUpdate</h2>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto text">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Liga <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item text"> <a class="nav-link">|</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pertandingan</a>
+                </li>
+                <li class="nav-item text"> <a class="nav-link">|</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Klub</a>
+                </li>
+                <li class="nav-item text"> <a class="nav-link">|</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pemain</a>
+                </li>
+            </ul>
+        </div>
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-warning" type="submit">Search</button>
+        </form>
+    </nav>
+
+    <div style="margin-top: 90px;">
+        <h3 id="nama-kompetisi" class="p-2 blue text-light" style="font-family: audiowide;">
+            Loading...
+        </h3>
+        <div id="spinner-utama" class="d-flex justify-content-center">
+            <div class="spinner-border my-3" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div id="app"></div>
+    </div>
+</body>
+
+<template id="temp-card-klub">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a id="link-card" class="card mb-3" href="#">
+            <div class="card-body">
+                <div class="d-flex justify-content-center mb-2">
+                    <img id="gmbr" src="" class="card-img-top" style="width:auto; max-height: 100px;">
+                </div>
+                <p id="klub" class="card-title text-center text-truncate">Nama Klub</p>
+                <div class="blue py-1 px-2">
+                    <p id="lokasi" class="text-light text-center text-truncate m-0">Lokasi</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</template>
+
+<template id="temp-card-negara">
+    <div class="card mx-2 my-3">
+        <div class="d-flex justify-content-center mt-2">
+            <h2 id="judul-negara" class="card-title" style="font-family: audiowide;">Card title</h2>
+        </div>
+        <div class="container-fluid">
+            <div id="tempat-klub" class="row"></div>
+        </div>
+    </div>
+</template>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+    integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+    crossorigin="anonymous"></script>
+
+<script>
+    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
+    const urlparams = new URLSearchParams(window.location.search)
+    const competitionId = urlparams.get("id")
+    const klubCard = document.getElementById("temp-card-klub")
+    const negaraCard = document.getElementById("temp-card-negara")
+    const placeHolderImg = './assets/img/Icon.png'
+
+    fetch(`http://api.football-data.org/v2/competitions/${competitionId}/teams`, {
+        method: "get"
+        , mode: 'cors'
+        , headers: {
+            'X-Auth-Token': TOKENFD
+        }
+    }).then(response => {
+        return response.json();
+    }).then(data => {
+        $("#nama-kompetisi").html(data.competition.name)
+        let teams = data.teams
+        let objGroupByNegara = {}
+        teams.forEach(el => {
+            let negara = el.area.name;
+            !objGroupByNegara[negara] && (objGroupByNegara[negara] = []);
+            objGroupByNegara[negara].push(el);
+        })
+        for (const negara in objGroupByNegara) {
+            let cloneNegaraCard = negaraCard.content.firstElementChild.cloneNode(true);
+            let tmptKlub = cloneNegaraCard.querySelector("#tempat-klub")
+            cloneNegaraCard.querySelector("#judul-negara").innerHTML = negara
+            objGroupByNegara[negara].forEach(elm => {
+                let cloneKlubCard = klubCard.content.firstElementChild.cloneNode(true);
+                cloneKlubCard.querySelector("#gmbr").src = elm.crestUrl ? elm.crestUrl : placeHolderImg
+                cloneKlubCard.querySelector("#klub").innerHTML = elm.name
+                cloneKlubCard.querySelector("#lokasi").innerHTML = elm.venue
+                cloneKlubCard.querySelector("#link-card").href = `listPemain.html?id=${elm.id}`
+                tmptKlub.appendChild(cloneKlubCard)
+            })
+            document.getElementById('app').appendChild(cloneNegaraCard)
+        }
+        document.getElementById("spinner-utama").classList.replace("d-flex", "d-none")
+    });
+</script>
+
+</html>
