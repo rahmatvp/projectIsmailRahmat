@@ -58,34 +58,15 @@
                 <h3 class="p-2" style="font-family: audiowide;" id="namaKlub">NAMA KLUB</h3>
             </div>
         </div>
-        <div class="h4 mt-4 text-center" style="font-family: audiowide;">Squad</div>
-        <div class="titlesquad"></div>
-
-        <div class="p-2">
-            <div class="card">
-                <div class="row row-cols-1 row-cols-md-4 g-4 p-2" id="pemain">
-                    <div class="col-md">
-                        <div class="card">
-                            <img src="assets/img/Icon.png " class="card-img-top imgPemain" alt="Gambar Pemain">
-                            <div class="card-body">
-                                <h5 class="card-title text-center">Nama Pemain</h5>
-                                <div class="blue mt-2">
-                                    <h5 class="text-light m-2 p-2 text-center">Posisi</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="app"></div>
     </div>
 
 
     <footer>
         <div class="container-fluid">
-           <div class="row">
-               <div class="col-md-12 blue">ha</div>
-           </div>
+            <div class="row">
+                <div class="col-md-12 blue">ha</div>
+            </div>
         </div>
     </footer>
 </body>
@@ -104,6 +85,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
+<template id="kartu-posisi">
+    <div>
+        <div id="judul-posisi" class="h4 mt-4 text-center" style="font-family: audiowide;">Squad</div>
+        <div class="titlesquad"></div>
+        <div class="p-2">
+            <div class="card">
+                <div id="pemain" class="row row-cols-1 row-cols-md-4 g-4 p-2"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
 <!-- headers: { 'X-Auth-Token': '128ecf8248de4be8a6e6178a4548b3a4' },
 url: 'http://api.football-data.org/v2/competitions', -->
 
@@ -112,17 +105,51 @@ url: 'http://api.football-data.org/v2/competitions', -->
     const URL = window.location.search
     const urlparams = new URLSearchParams(URL)
     const klubId = urlparams.get("id")
+    const templateKartuPosisi = document.getElementById("kartu-posisi")
 
     $.ajax({
         headers: { 'X-Auth-Token': '128ecf8248de4be8a6e6178a4548b3a4' },
         url: `http://api.football-data.org/v2/teams/${klubId}`,
         dataType: 'JSON',
         type: 'GET',
-        success: function ({ name,squad,crestUrl }) {
+        success: function ({ name, squad, crestUrl }) {
 
-            $('#namaKlub').html(name)  
 
-            let htmlContent = ''
+            $('#namaKlub').html(name)
+
+            let objGroupByPos = {}
+
+            squad.forEach(person => {
+                let position = person.role === "PLAYER" ? person.position : person.role;
+                !objGroupByPos[position] && (objGroupByPos[position] = []);
+                objGroupByPos[position].push(person);
+            })
+
+            
+            for (const position in objGroupByPos) {
+                let kartu = templateKartuPosisi.content.firstElementChild.cloneNode(true);
+                kartu.querySelector("#judul-posisi").innerHTML = position
+                let htmlContent = ''
+                objGroupByPos[position].forEach(person => {
+                    htmlContent +=
+                        `<a href ="biodata.html?id=${person.id}&klub=${crestUrl}">
+                        <div class="col-md">
+                            <div class="card">
+                                <img src="assets/img/Icon.png " class="card-img-top imgPemain" alt="Gambar Pemain">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">${person.name}</h5>
+                                    <div class="blue mt-2">
+                                        <h5 class="text-light m-2 p-2 text-center">${person.position}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>`
+                })
+                kartu.querySelector("#pemain").innerHTML = htmlContent
+                $("#app").append(kartu)
+            }
+            /* let htmlContent = ''
             squad.forEach(element => {
                 htmlContent += ` <a href ="biodata.html?id=${element.id}&klub=${crestUrl}">
                                   <div class="col-md">
@@ -137,9 +164,9 @@ url: 'http://api.football-data.org/v2/competitions', -->
                                     </div>
                                 </div>
                                 </a>`
-            });
+            }); */
 
-            $('#pemain').html(htmlContent)
+            // $('#pemain').html(htmlContent)
         }
     });
 </script>
