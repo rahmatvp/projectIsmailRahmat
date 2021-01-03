@@ -52,55 +52,26 @@
         <!-- </div> -->
     </nav>
 
-    <div class="container p-1">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 blue text-light mt-3 fs-4">
-                <h3 class="p-2">Liga</h3>
+    
+            <div class="col-md-12 blue text-light mt-4 fs-4" style="font-family: audiowide;">
+                <h3 class="p-2 text-center">Liga</h3>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12" style="background-color:  #dbaa17ce;">
-                <div class="text-dark"> List Liga - Liga Sepak Bola</div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="accordion" id="according">
-                <div class="card">
-                    <div class="card-header" id="headingOne">
-                        <h2 class="mb-0">
-                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Collapse 1
-                            </button>
-                        </h2>
-                    </div>
-
-                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#according">
-                        <div class="card-body">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo minus consectetur aliquid corrupti, dolore rem odit molestiae, officia ipsum perferendis magni deleniti quas adipisci in illum a harum, ex corporis!
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="container-flluid blue">
-            <div class="card text-center">
-                <div class="card-header">
-                  Featured
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-                <div class="card-footer text-muted">
-                  2 days ago
+    
+            <div class="d-flex justify-content-center mt-2" id="spinnerLiga">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
                 </div>
               </div>
+              
+            <div class="accordion pt-1" id="collapse">
+                <div id="app"></div>
+            </div>
+    
         </div>
+    </div>
+    
 </body>
 
 
@@ -116,80 +87,94 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+<template id="kartuNegara">
+    <div class="card">
+        <div id="headingCard">
+            <div class="card-header" id="heading1">
+                <h2 class="mb-0">
+                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                        data-target="#collapse1" aria-expanded="false" aria-controls="collapse1" id="judulnegara">
+                        Negara
+                    </button>
+
+                </h2>
+            </div>
+        </div>
+        <div id="namaliga">
+            <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#collapse">
+                <div class="card-body">
+                    Nama Liga
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>
+
 
 <!-- headers: { 'X-Auth-Token': '128ecf8248de4be8a6e6178a4548b3a4' },
 url: 'http://api.football-data.org/v2/competitions', -->
 
 <script>
 
-    $.ajax({
-        headers: { 'X-Auth-Token': '128ecf8248de4be8a6e6178a4548b3a4' },
-        url: "http://api.football-data.org/v2/competitions/",
-        dataType: 'JSON',
-        type: 'GET',
+const templateKartuNegara = document.getElementById("kartuNegara")
 
-        success: function ({ competitions }) { //langsung nama object jsonnya apa
-            // //console.log(competitions)
+$.ajax({
+    headers: { 'X-Auth-Token': '128ecf8248de4be8a6e6178a4548b3a4' },
+    url: "http://api.football-data.org/v2/competitions/",
+    dataType: 'JSON',
+    type: 'GET',
 
-            // var objctGroupByArea = {}
-            // for (const key in competitions) {
-            //     var area = competitions[key].area.name;
-            //     if (!objctGroupByArea[area]) {
-            //         objctGroupByArea[area] = [];
+    success: function ({ competitions }) { //langsung nama object jsonnya apa
 
-            //     }
-            //     objctGroupByArea[area].push(competitions[key]);
-            // }
+        let objGroupByNegara = {}
 
-            // console.log(objctGroupByArea)
-            // var tes = Object.keys(objctGroupByArea).length
-            // console.log(tes)
+        competitions.forEach(negara => {
+            let kodeNegara = negara.area.name
+            //let bendera = negara.ensignrul
+            if (negara.plan == 'TIER_ONE') {
+                !objGroupByNegara[kodeNegara] && (objGroupByNegara[kodeNegara] = []);
+                objGroupByNegara[kodeNegara].push(negara);
+            }
+        })
 
-            // var tes2 = objctGroupByArea.Africa
+        
+        var j = 0;
 
-            // console.log(tes2)
+        for (const kodeNegara in objGroupByNegara) {
+            j++;
+           
+            let kartu = templateKartuNegara.content.firstElementChild.cloneNode(true);
+            const bendera = objGroupByNegara[kodeNegara][0].area.ensignUrl
+
+            kartu.querySelector("#headingCard").innerHTML = `<div class="card-header" id="heading${j}">
+                                                                <h2 class="mb-0">
+                                                                    <img src="${bendera}" id="logoNegara">
+                                                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                                                        data-target="#collapse${j}" aria-expanded="true" aria-controls="collapse${j}" id="judulnegara">
+                                                                        ${kodeNegara}
+                                                                    </button>
+                                                                </h2>
+                                                            </div>`
+
             let htmlContent = ''
-            let colind = 0;
-            competitions.forEach(element => {
-
-                colind++;
-                htmlContent += ` <div class="card">
-                    <div class="card-header" id="heading+${colind}">
-                        <h2 class="mb-0">
-                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                                data-target="#collapse+${colind}" aria-expanded="true" aria-controls="collapse+${colind}">
-                                ${element.name}
-                            </button>
-                        </h2>
-                    </div>
-
-                    <div id="collapse+${colind}" class="collapse show" aria-labelledby="heading+${colind}"
-                        data-parent="#according">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                            squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
-                            nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
-                            single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
-                            beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice
-                            lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
-                            probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                </div>`
+            objGroupByNegara[kodeNegara].forEach(kompetisi => {
+                htmlContent += ` <div id="collapse${j}" class="collapse" aria-labelledby="heading${j}" data-parent="#collapse">
+                                    <div class="card-body">
+                                        <img src="${kompetisi.emblemUrl}" id="logoLiga"> 
+                                        <a href="klub.html?id=${kompetisi.id}">${kompetisi.name}</a>
+                                    </div>
+                                </div>`
             });
-            document.getElementById('according').innerHTML = htmlContent
+               
+            document.getElementById("spinnerLiga").classList.replace("d-flex","d-none")
+            kartu.querySelector("#namaliga").innerHTML = htmlContent
+            $("#app").append(kartu)
 
-            // let htmlContent = ''
-            // for (let index = 0; index <= tes; index++) {
-
-
-
-            //  }
-            //  
         }
 
-
-    });
+    }
+});
 
 </script>
 
