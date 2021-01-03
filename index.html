@@ -117,64 +117,64 @@ url: 'http://api.football-data.org/v2/competitions', -->
 
 <script>
 
-const templateKartuNegara = document.getElementById("kartuNegara")
+     const templateKartuNegara = document.getElementById("kartuNegara")
 
-$.ajax({
-    headers: { 'X-Auth-Token': '128ecf8248de4be8a6e6178a4548b3a4' },
-    url: "http://api.football-data.org/v2/competitions/",
-    dataType: 'JSON',
-    type: 'GET',
+    $.ajax({
+        headers: { 'X-Auth-Token': '128ecf8248de4be8a6e6178a4548b3a4' },
+        url: "http://api.football-data.org/v2/competitions/",
+        dataType: 'JSON',
+        type: 'GET',
 
-    success: function ({ competitions }) { //langsung nama object jsonnya apa
+        success: function ({ competitions }) { //langsung nama object jsonnya apa
 
-        let objGroupByNegara = {}
+            let objGroupByNegara = {}
 
-        competitions.forEach(negara => {
-            let kodeNegara = negara.area.name
-            //let bendera = negara.ensignrul
-            if (negara.plan == 'TIER_ONE') {
-                !objGroupByNegara[kodeNegara] && (objGroupByNegara[kodeNegara] = []);
-                objGroupByNegara[kodeNegara].push(negara);
-            }
-        })
+            competitions.forEach(negara => {
+                let kodeNegara = negara.area.name
+                //let bendera = negara.ensignrul
+                if (negara.plan == 'TIER_ONE') {
+                    !objGroupByNegara[kodeNegara] && (objGroupByNegara[kodeNegara] = []);
+                    objGroupByNegara[kodeNegara].push(negara);
+                }
+            })
 
-        
-        var j = 0;
+            
+            var j = 0;
 
-        for (const kodeNegara in objGroupByNegara) {
-            j++;
-           
-            let kartu = templateKartuNegara.content.firstElementChild.cloneNode(true);
-            const bendera = objGroupByNegara[kodeNegara][0].area.ensignUrl
-
-            kartu.querySelector("#headingCard").innerHTML = `<div class="card-header" id="heading${j}">
-                                                                <h2 class="mb-0">
-                                                                    <img src="${bendera}" id="logoNegara">
-                                                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                                                                        data-target="#collapse${j}" aria-expanded="true" aria-controls="collapse${j}" id="judulnegara">
-                                                                        ${kodeNegara}
-                                                                    </button>
-                                                                </h2>
-                                                            </div>`
-
-            let htmlContent = ''
-            objGroupByNegara[kodeNegara].forEach(kompetisi => {
-                htmlContent += ` <div id="collapse${j}" class="collapse" aria-labelledby="heading${j}" data-parent="#collapse">
-                                    <div class="card-body">
-                                        <img src="${kompetisi.emblemUrl}" id="logoLiga"> 
-                                        <a href="klub.html?id=${kompetisi.id}">${kompetisi.name}</a>
-                                    </div>
-                                </div>`
-            });
+            for (const kodeNegara in objGroupByNegara) {
+                j++;
                
-            document.getElementById("spinnerLiga").classList.replace("d-flex","d-none")
-            kartu.querySelector("#namaliga").innerHTML = htmlContent
-            $("#app").append(kartu)
+                let kartu = templateKartuNegara.content.firstElementChild.cloneNode(true);
+                const bendera = objGroupByNegara[kodeNegara][0].area.ensignUrl
+
+                kartu.querySelector("#headingCard").innerHTML = `<div class="card-header" id="heading${j}">
+                                                                    <h2 class="mb-0">
+                                                                        <img src="${bendera}" id="logoNegara">
+                                                                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                                                            data-target="#collapse${j}" aria-expanded="true" aria-controls="collapse${j}" id="judulnegara">
+                                                                            ${kodeNegara}
+                                                                        </button>
+                                                                    </h2>
+                                                                </div>`
+
+                let htmlContent = ''
+                objGroupByNegara[kodeNegara].forEach(kompetisi => {
+                    htmlContent += ` <div id="collapse${j}" class="collapse" aria-labelledby="heading${j}" data-parent="#collapse">
+                                        <div class="card-body">
+                                            <img src="${kompetisi.emblemUrl}" id="logoLiga"> 
+                                            <a href="klub.html?id=${kompetisi.id}">${kompetisi.name}</a>
+                                        </div>
+                                    </div>`
+                });
+                   
+                document.getElementById("spinnerLiga").classList.replace("d-flex","d-none")
+                kartu.querySelector("#namaliga").innerHTML = htmlContent
+                $("#app").append(kartu)
+
+            }
 
         }
-
-    }
-});
+    });
 
 </script>
 

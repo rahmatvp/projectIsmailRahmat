@@ -52,9 +52,9 @@
         <!-- </div> -->
     </nav>
 
-    <div class="container p-1">
-        <div class="row" style="margin-top: 90px;">
-            <div class="col-md-12 blue text-light mt-3 fs-4">
+     <div class="container-fluid">
+        <div class="row pt-4">
+            <div class="col-md-12 blue text-light fs-4">
                 <h3 id="namaKlub" class="p-2" style="font-family: audiowide;">
                     NAMA KLUB
                 </h3>
@@ -117,7 +117,7 @@ url: 'http://api.football-data.org/v2/competitions', -->
         success: function ({ name, squad, crestUrl }) {
 
 
-            $('#namaKlub').html(name)
+            $('#namaKlub').html( "Squad : "+name)
 
             let objGroupByPos = {}
 
@@ -130,14 +130,14 @@ url: 'http://api.football-data.org/v2/competitions', -->
             
             for (const position in objGroupByPos) {
                 let kartu = templateKartuPosisi.content.firstElementChild.cloneNode(true);
-                kartu.querySelector("#judul-posisi").innerHTML = position
+                kartu.querySelector("#judul-posisi").innerHTML =position
                 let htmlContent = ''
                 objGroupByPos[position].forEach(person => {
                     htmlContent +=
                         `<a href ="biodata.html?id=${person.id}&klub=${crestUrl}">
                         <div class="col-md">
                             <div class="card">
-                                <img src="assets/img/Icon.png " class="card-img-top imgPemain" alt="Gambar Pemain">
+                                <img src="https://secure.cache.images.core.optasports.com/soccer/players/50x50/uuid_9gdocwx006j6wyz4mnhzgzydx.png" class="card-img-top mx-auto mt-2" alt="Gambar Pemain" style="width:40%; height:40%">
                                 <div class="card-body">
                                     <h5 class="card-title text-center">${person.name}</h5>
                                     <div class="blue mt-2">
@@ -151,24 +151,6 @@ url: 'http://api.football-data.org/v2/competitions', -->
                 kartu.querySelector("#pemain").innerHTML = htmlContent
                 $("#app").append(kartu)
             }
-            /* let htmlContent = ''
-            squad.forEach(element => {
-                htmlContent += ` <a href ="biodata.html?id=${element.id}&klub=${crestUrl}">
-                                  <div class="col-md">
-                                    <div class="card">
-                                        <img src="assets/img/Icon.png " class="card-img-top imgPemain" alt="Gambar Pemain">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-center">${element.name}</h5>
-                                            <div class="blue mt-2">
-                                                <h5 class="text-light m-2 p-2 text-center">${element.position}</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                </a>`
-            }); */
-
-            // $('#pemain').html(htmlContent)
         }
     });
 </script>
