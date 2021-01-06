@@ -5,7 +5,7 @@
     $("body").append(navbar).css('padding-top', navbar.offsetHeight)
     let path = window.location.pathname
     let ol = navbar.querySelector("ol")
-    switch (path.split("/")[1]) {
+    switch (path.split("/")[2]) {
         case "biodata.html":
             ol.innerHTML +=
                 `<li class="breadcrumb-item"><a href="index.html">Home</a></li>
