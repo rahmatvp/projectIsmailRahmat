@@ -201,15 +201,20 @@
 
     // Ambil parameters yang ada di url
     let urlParams = new URLSearchParams(window.location.search)
-    let playerID = urlParams.get("id")
-    let logoKlub = urlParams.get("klub")
+    let orgId = urlParams.get("id")
+    let orgNama = urlParams.get("orgNama")
+    let klubId = urlParams.get("klubId")
+    let klubNama = urlParams.get("klubNama")
+    let kompId = urlParams.get("kompId")
+    let kompNama = urlParams.get("kompNama")
+    let klubImg = urlParams.get("klubImg")
 
     // Ambil data awal pemain yg ditampilkan di kepala,
     // short-circuit klo url gak ada parameter "id" di-url
-    playerID && getPlayer(playerID)
+    orgId && getPlayer(orgId)
 
     // Set logo klub, short-circuit klo ga ada parameter "klub" di-url
-    logoKlub && (document.getElementById("klub").srcset = logoKlub)
+    klubImg && (document.getElementById("klub").srcset = klubImg)
 
     tombolMatches.addEventListener("click", function () {
         let tombolLama = this.parentElement.querySelector(".btn-primary")
@@ -220,7 +225,7 @@
             this.classList.add("font-weight-bold")
             tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
             tombolLama && tombolLama.classList.remove("font-weight-bold")
-            dataMatches || getMatches(`${URLFD}/players/${playerID}/matches`)
+            dataMatches || getMatches(`${URLFD}/players/${orgId}/matches`)
         }
     })
 
@@ -250,10 +255,10 @@
         })
     }
 
-    function getPlayer(playerID) {
+    function getPlayer(orgId) {
         let perluBerubah = document.querySelectorAll(".perlu-berubah")
 
-        fetch(`${URLFD}/players/${playerID}`, {
+        fetch(`${URLFD}/players/${orgId}`, {
             method: "get"
             , mode: 'cors'
             , headers: {

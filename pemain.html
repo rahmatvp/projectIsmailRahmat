@@ -37,7 +37,7 @@
 <body>
     <div class="container-fluid">
         <div class="col-md-12 blue text-light fs-4">
-            <h3 id="namaKlub" class="p-2 font-awide">
+            <h3 id="nama-klub" class="p-2 font-awide">
                 Loading...
             </h3>
         </div>
@@ -69,6 +69,9 @@
 <script>
     const urlparams = new URLSearchParams(window.location.search)
     const klubId = urlparams.get("id")
+    const klubNama = urlparams.get("klubNama")
+    const kompId = urlparams.get("kompId")
+    const kompNama = urlparams.get("kompNama")
     const spinnerPemain = document.getElementById("spinner-pemain")
     const templateKartuPosisi = document.getElementById("kartu-posisi")
     
@@ -83,8 +86,8 @@
         }
     }).then(response => {
         return response.json();
-    }).then(({ name, squad, crestUrl }) => {
-        $('#namaKlub').html("Squad : " + name)
+    }).then(({ id, name, squad, crestUrl }) => {
+        $('#nama-klub').html("Squad : " + name)
         let objGroupByPos = {}
         squad.forEach(person => {
             let position = person.role === "PLAYER" ? person.position : person.role;
@@ -98,7 +101,7 @@
             objGroupByPos[position].forEach(person => {
                 htmlContent +=
                     `<div class="card d-flex flex-wrap pt-3 px-3 m-2 kartu-pemain">
-                        <a href="biodata.html?id=${person.id}&klub=${crestUrl}" class="d-flex align-items-center flex-column">
+                        <a href="biodata.html?id=${person.id}&orgNama=${person.name}&klubId=${id}&klubNama=${name}&klubImg=${crestUrl}&kompId=${kompId}&kompNama=${kompNama}" class="d-flex align-items-center flex-column">
                             <img src="${PLACEHOLDERIMG}" class="card-img-top wh-100px">
                             <div class="card-body">
                                 <p class="card-title text-center">${person.name}</p>

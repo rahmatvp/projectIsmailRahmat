@@ -56,6 +56,7 @@
 <script>
     const urlparams = new URLSearchParams(window.location.search)
     const competitionId = urlparams.get("id")
+    const kompNama = urlparams.get("kompNama")
     const klubCard = document.getElementById("temp-card-klub")
     const negaraCard = document.getElementById("temp-card-negara")
     
@@ -70,9 +71,8 @@
         }
     }).then(response => {
         return response.json();
-    }).then(data => {
-        $("#nama-kompetisi").html(data.competition.name)
-        let teams = data.teams
+    }).then(({competition, teams}) => {
+        $("#nama-kompetisi").html(competition.name)
         let objGroupByNegara = {}
         teams.forEach(el => {
             let negara = el.area.name;
@@ -88,7 +88,7 @@
                 cloneKlubCard.querySelector("#gmbr").src = elm.crestUrl ? elm.crestUrl : PLACEHOLDERIMG
                 cloneKlubCard.querySelector("#klub").innerHTML = elm.name
                 cloneKlubCard.querySelector("#lokasi").innerHTML = elm.venue
-                cloneKlubCard.querySelector("#link-card").href = `pemain.html?id=${elm.id}`
+                cloneKlubCard.querySelector("#link-card").href = `pemain.html?id=${elm.id}&klubNama=${elm.name}&kompId=${competition.id}&kompNama=${competition.name}`
                 tmptKlub.appendChild(cloneKlubCard)
             })
             document.getElementById('app').appendChild(cloneNegaraCard)
