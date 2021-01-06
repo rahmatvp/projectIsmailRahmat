@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>SoccerUpdate - Select Player</title>
+    <link rel="shortcut icon" href="favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .titlesquad {
+            height: 3px;
+            background-color: #a2aaad;
+            margin-top: 3px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: audiowide;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row pt-4">
+            <div class="col-md-12 blue text-light fs-4">
+                <h3 id="namaKlub" class="p-2 font-awide">
+                    NAMA KLUB
+                </h3>
+            </div>
+        </div>
+        <div id="app"></div>
+    </div>
+</body>
+
+<script src="assets/js/jquery-3.5.1.slim.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/getNavbar.js"></script>
+<script src="assets/js/getFooter.js"></script>
+
+<template id="kartu-posisi">
+    <div>
+        <div id="judul-posisi" class="h4 mt-4 text-center font-awide">Squad</div>
+        <div class="titlesquad"></div>
+        <div class="p-2">
+            <div class="card">
+                <div id="pemain" class="row row-cols-1 row-cols-md-4 g-4 p-2"></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script>
+    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
+    const URL = window.location.search
+    const urlparams = new URLSearchParams(URL)
+    const klubId = urlparams.get("id")
+    const templateKartuPosisi = document.getElementById("kartu-posisi")
+
+    fetch(`http://api.football-data.org/v2/teams/${klubId}`, {
+        method: "get"
+        , mode: 'cors'
+        , headers: {
+            'X-Auth-Token': TOKENFD
+        }
+    }).then(response => {
+        return response.json();
+    }).then(({ name, squad, crestUrl }) => {
+        $('#namaKlub').html("Squad : " + name)
+        let objGroupByPos = {}
+        squad.forEach(person => {
+            let position = person.role === "PLAYER" ? person.position : person.role;
+            !objGroupByPos[position] && (objGroupByPos[position] = []);
+            objGroupByPos[position].push(person);
+        })
+        for (const position in objGroupByPos) {
+            let kartu = templateKartuPosisi.content.firstElementChild.cloneNode(true);
+            kartu.querySelector("#judul-posisi").innerHTML = position
+            let htmlContent = ''
+            objGroupByPos[position].forEach(person => {
+                htmlContent +=
+                    `<a href ="biodata.html?id=${person.id}&klub=${crestUrl}">
+                        <div class="col-md">
+                            <div class="card">
+                                <img src="https://secure.cache.images.core.optasports.com/soccer/players/50x50/uuid_9gdocwx006j6wyz4mnhzgzydx.png" class="card-img-top mx-auto mt-2" alt="Gambar Pemain" style="width:40%; height:40%">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">${person.name}</h5>
+                                    <div class="blue mt-2">
+                                        <h5 class="text-light m-2 p-2 text-center">${person.position}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>`
+            })
+            kartu.querySelector("#pemain").innerHTML = htmlContent
+            $("#app").append(kartu)
+        }
+    });
+</script>
+
+</html>

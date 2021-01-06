@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+
+.blue {
+  background-color: #081f2c !important;
+}
+
+.font-awide{
+  font-family: audiowide;
+}
+
+h1.text {
+  font-family: audiowide;
+  font-weight: lighter;
+  color: #dbaa17ce !important;
+}
+
+.text {
+    font-family: audiowide;
+    font-weight: lighter;
+    color: #dbaa17ce !important;
+  }
