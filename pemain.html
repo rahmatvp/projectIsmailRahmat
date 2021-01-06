@@ -24,11 +24,14 @@
 
 <body>
     <div class="container-fluid">
-        <div class="row pt-4">
-            <div class="col-md-12 blue text-light fs-4">
-                <h3 id="namaKlub" class="p-2 font-awide">
-                    NAMA KLUB
-                </h3>
+        <div class="col-md-12 blue text-light fs-4">
+            <h3 id="namaKlub" class="p-2 font-awide">
+                Loading...
+            </h3>
+        </div>
+        <div id="spinner-pemain" class="d-flex justify-content-center mt-2">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
             </div>
         </div>
         <div id="app"></div>
@@ -58,6 +61,7 @@
     const URL = window.location.search
     const urlparams = new URLSearchParams(URL)
     const klubId = urlparams.get("id")
+    const spinnerPemain = document.getElementById("spinner-pemain")
     const templateKartuPosisi = document.getElementById("kartu-posisi")
 
     fetch(`http://api.football-data.org/v2/teams/${klubId}`, {
@@ -98,6 +102,7 @@
             })
             kartu.querySelector("#pemain").innerHTML = htmlContent
             $("#app").append(kartu)
+            spinnerPemain.classList.replace("d-flex", "d-none")
         }
     });
 </script>
