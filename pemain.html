@@ -19,6 +19,10 @@
             text-align: center;
             font-family: audiowide;
         }
+        .wh-100px {
+            width: 100px;
+            height: 100px;
+        }
     </style>
 </head>
 
@@ -49,7 +53,7 @@
         <div class="titlesquad"></div>
         <div class="p-2">
             <div class="card">
-                <div id="pemain" class="row row-cols-1 row-cols-md-4 g-4 p-2"></div>
+                <div id="pemain" class="d-flex flex-wrap p-2"></div>
             </div>
         </div>
     </div>
@@ -63,6 +67,7 @@
     const klubId = urlparams.get("id")
     const spinnerPemain = document.getElementById("spinner-pemain")
     const templateKartuPosisi = document.getElementById("kartu-posisi")
+    const urImgPlaceholder = "https://secure.cache.images.core.optasports.com/soccer/players/50x50/uuid_9gdocwx006j6wyz4mnhzgzydx.png"
 
     fetch(`http://api.football-data.org/v2/teams/${klubId}`, {
         method: "get"
@@ -86,19 +91,17 @@
             let htmlContent = ''
             objGroupByPos[position].forEach(person => {
                 htmlContent +=
-                    `<a href ="biodata.html?id=${person.id}&klub=${crestUrl}">
-                        <div class="col-md">
-                            <div class="card">
-                                <img src="https://secure.cache.images.core.optasports.com/soccer/players/50x50/uuid_9gdocwx006j6wyz4mnhzgzydx.png" class="card-img-top mx-auto mt-2" alt="Gambar Pemain" style="width:40%; height:40%">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">${person.name}</h5>
-                                    <div class="blue mt-2">
-                                        <h5 class="text-light m-2 p-2 text-center">${person.position}</h5>
-                                    </div>
+                    `<div class="card d-flex flex-wrap pt-3 px-3 m-2" style="width:200px">
+                        <a href="biodata.html?id=${person.id}&klub=${crestUrl}" class="d-flex justify-content-center flex-wrap">
+                            <img src="${urImgPlaceholder}" class="card-img-top wh-100px">
+                            <div class="card-body">
+                                <p class="card-title text-center">${person.name}</p>
+                                <div class="blue mt-2">
+                                    <p class="text-light m-2 p-2 text-center">${person.nationality}</p>
                                 </div>
                             </div>
-                        </div>
-                    </a>`
+                        </a>
+                    </div>`
             })
             kartu.querySelector("#pemain").innerHTML = htmlContent
             $("#app").append(kartu)
