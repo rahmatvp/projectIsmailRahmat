@@ -203,8 +203,8 @@
 
     // Ambil parameters yang ada di url
     let urlParams = new URLSearchParams(window.location.search)
-    let playerID = urlParams["id"]
-    let logoKlub = urlParams["klub"]
+    let playerID = urlParams.get("id")
+    let logoKlub = urlParams.get("klub")
 
     // Ambil data awal pemain yg ditampilkan di kepala,
     // short-circuit klo url gak ada parameter "id" di-url
