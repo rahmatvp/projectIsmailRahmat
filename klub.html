@@ -56,12 +56,13 @@
 </template>
 
 <script>
-    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
     const urlparams = new URLSearchParams(window.location.search)
     const competitionId = urlparams.get("id")
     const klubCard = document.getElementById("temp-card-klub")
     const negaraCard = document.getElementById("temp-card-negara")
-    const placeHolderImg = './assets/img/Icon.png'
+    
+    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
+    const PLACEHOLDERIMG = './assets/img/Icon.png'
 
     fetch(`http://api.football-data.org/v2/competitions/${competitionId}/teams`, {
         method: "get"
@@ -86,7 +87,7 @@
             cloneNegaraCard.querySelector("#judul-negara").innerHTML = negara
             objGroupByNegara[negara].forEach(elm => {
                 let cloneKlubCard = klubCard.content.firstElementChild.cloneNode(true);
-                cloneKlubCard.querySelector("#gmbr").src = elm.crestUrl ? elm.crestUrl : placeHolderImg
+                cloneKlubCard.querySelector("#gmbr").src = elm.crestUrl ? elm.crestUrl : PLACEHOLDERIMG
                 cloneKlubCard.querySelector("#klub").innerHTML = elm.name
                 cloneKlubCard.querySelector("#lokasi").innerHTML = elm.venue
                 cloneKlubCard.querySelector("#link-card").href = `pemain.html?id=${elm.id}`

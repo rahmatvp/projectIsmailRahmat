@@ -54,12 +54,12 @@
 <script src="assets/js/getFooter.js"></script>
 
 <script>
-    const urlFetch = "http://api.football-data.org/v2/competitions/"
-    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
     const templateKartuNegara = document.getElementById("kartu-negara")
-    const urlImgPlaceholder = "assets/img/Icon.png"
+    
+    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
+    const PLACEHOLDERIMG = "assets/img/Icon.png"
 
-    fetch(urlFetch, {
+    fetch("http://api.football-data.org/v2/competitions/", {
         method: "get"
         , mode: 'cors'
         , headers: {
@@ -83,7 +83,7 @@
             j++;
             let kartu = templateKartuNegara.content.firstElementChild.cloneNode(true);
             let urlBendera = objGroupByNegara[kodeNegara][0].area.ensignUrl
-            let bendera = urlBendera ? urlBendera : urlImgPlaceholder
+            let bendera = urlBendera ? urlBendera : PLACEHOLDERIMG
             // Kepala accordion-nya
             let headingCard = kartu.querySelector("#heading-card")
             headingCard.id = `heading${j}`
@@ -100,7 +100,7 @@
             let htmlContent =
                 `<div id="collapse${j}" class="collapse" aria-labelledby="heading${j}" data-parent="#collapse">`
             objGroupByNegara[kodeNegara].forEach(kompetisi => {
-                let emblem = kompetisi.emblemUrl ? kompetisi.emblemUrl : urlImgPlaceholder
+                let emblem = kompetisi.emblemUrl ? kompetisi.emblemUrl : PLACEHOLDERIMG
                 htmlContent +=
                     `<div class="card-body">
                         <img src="${emblem}" class="mr-2 wh-50px"> 

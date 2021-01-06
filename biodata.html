@@ -181,6 +181,7 @@
 <script src="assets/js/getFooter.js"></script>
 
 <script>
+    // Ambil DOM Elements utk diubah
     const spinner = document.getElementById('spinner');
     const spinnerWiki = document.getElementById('spinner-wiki');
     const spinnerUtama = document.getElementById('spinner-utama');
@@ -191,20 +192,25 @@
     const templateKartuMatch = document.getElementById("template-kartu-match");
     const templateKartuWiki = document.getElementById("template-kartu-wiki")
 
-    const PLACEHOLDERIMG = "https://i.pinimg.com/originals/2c/02/c2/2c02c2325982d8d9eaade2d7456424a3.png"
+    // Set variabel-variabel yg statis
+    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
     const URLWK = "https://en.wikipedia.org/"
     const URLFD = "http://api.football-data.org/v2"
-    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
+    const PLACEHOLDERIMG = "https://i.pinimg.com/originals/2c/02/c2/2c02c2325982d8d9eaade2d7456424a3.png"
 
-    let dataMatches, dataWiki, searchWiki;
+    // Variabel utk simpan data hasil fetch
+    let dataMatches, dataWiki, searchWiki, playerNationality = "";
 
-    let urlParams = getUrlVars();
+    // Ambil parameters yang ada di url
+    let urlParams = new URLSearchParams(window.location.search)
     let playerID = urlParams["id"]
     let logoKlub = urlParams["klub"]
-    let playerNationality = ""
 
+    // Ambil data awal pemain yg ditampilkan di kepala,
+    // short-circuit klo url gak ada parameter "id" di-url
     playerID && getPlayer(playerID)
 
+    // Set logo klub, short-circuit klo ga ada parameter "klub" di-url
     logoKlub && (document.getElementById("klub").srcset = logoKlub)
 
     tombolMatches.addEventListener("click", function () {
@@ -216,7 +222,7 @@
             this.classList.add("font-weight-bold")
             tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
             tombolLama && tombolLama.classList.remove("font-weight-bold")
-            !dataMatches && getMatches(`${URLFD}/players/${playerID}/matches`)
+            dataMatches || getMatches(`${URLFD}/players/${playerID}/matches`)
         }
     })
 
@@ -229,17 +235,9 @@
             this.classList.add("font-weight-bold")
             tombolLama && tombolLama.classList.replace("btn-primary", "btn-outline-light")
             tombolLama && tombolLama.classList.remove("font-weight-bold")
-            !dataWiki && getWiki(`${URLWK}w/rest.php/v1/search/page?q=${searchWiki}&limit=5`)
+            dataWiki || getWiki(`${URLWK}w/rest.php/v1/search/page?q=${searchWiki}&limit=5`)
         }
     })
-
-    function getUrlVars() {
-        let vars = {};
-        let parts = window.location.href.replace(/[?&#]+([^=&#]+)=([^&#]*)/gi, function (m, key, value) {
-            vars[key] = value;
-        });
-        return vars;
-    }
 
     function getBendera(negara) {
         fetch(`${URLWK}w/rest.php/v1/search/page?q=${negara}&limit=1`, {

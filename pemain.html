@@ -69,13 +69,13 @@
 
 
 <script>
-    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
-    const URL = window.location.search
-    const urlparams = new URLSearchParams(URL)
+    const urlparams = new URLSearchParams(window.location.search)
     const klubId = urlparams.get("id")
     const spinnerPemain = document.getElementById("spinner-pemain")
     const templateKartuPosisi = document.getElementById("kartu-posisi")
-    const urImgPlaceholder = "https://secure.cache.images.core.optasports.com/soccer/players/50x50/uuid_9gdocwx006j6wyz4mnhzgzydx.png"
+    
+    const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
+    const PLACEHOLDERIMG = "https://secure.cache.images.core.optasports.com/soccer/players/50x50/uuid_9gdocwx006j6wyz4mnhzgzydx.png"
 
     fetch(`http://api.football-data.org/v2/teams/${klubId}`, {
         method: "get"
@@ -101,7 +101,7 @@
                 htmlContent +=
                     `<div class="card d-flex flex-wrap pt-3 px-3 m-2 kartu-pemain">
                         <a href="biodata.html?id=${person.id}&klub=${crestUrl}" class="d-flex align-items-center flex-column">
-                            <img src="${urImgPlaceholder}" class="card-img-top wh-100px">
+                            <img src="${PLACEHOLDERIMG}" class="card-img-top wh-100px">
                             <div class="card-body">
                                 <p class="card-title text-center">${person.name}</p>
                                 <div class="blue mt-2">
