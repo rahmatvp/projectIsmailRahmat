@@ -23,6 +23,14 @@
             width: 100px;
             height: 100px;
         }
+        .kartu-pemain{
+            width: 100%;
+        }
+        @media (min-width: 576px) {
+            .kartu-pemain {
+                width: 200px;
+            }
+        }
     </style>
 </head>
 
@@ -91,8 +99,8 @@
             let htmlContent = ''
             objGroupByPos[position].forEach(person => {
                 htmlContent +=
-                    `<div class="card d-flex flex-wrap pt-3 px-3 m-2" style="width:200px">
-                        <a href="biodata.html?id=${person.id}&klub=${crestUrl}" class="d-flex justify-content-center flex-wrap">
+                    `<div class="card d-flex flex-wrap pt-3 px-3 m-2 kartu-pemain">
+                        <a href="biodata.html?id=${person.id}&klub=${crestUrl}" class="d-flex align-items-center flex-column">
                             <img src="${urImgPlaceholder}" class="card-img-top wh-100px">
                             <div class="card-body">
                                 <p class="card-title text-center">${person.name}</p>
