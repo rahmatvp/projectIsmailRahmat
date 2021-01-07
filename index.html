@@ -56,15 +56,17 @@
     const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
     const PLACEHOLDERIMG = "assets/img/Icon.png"
 
+    let competitions;
+
     fetch("http://api.football-data.org/v2/competitions/", {
         method: "get"
         , mode: 'cors'
         , headers: {
             'X-Auth-Token': TOKENFD
         }
-    }).then(response => {
-        return response.json();
-    }).then(({ competitions }) => {
+    }).then(res => res.json()).then(({ competitions: c }) => {competitions = c; appendElms(c);});
+
+    function appendElms(competitions) {
         // Kategorisasi setiap kompetisi dalam property negara
         let objGroupByNegara = {}
         competitions.forEach(negara => {
@@ -96,7 +98,7 @@
                 `<div id="collapse${j}" class="collapse" aria-labelledby="heading${j}" data-parent="#collapse">`
             objGroupByNegara[kodeNegara].forEach(kompetisi => {
                 let emblem = kompetisi.emblemUrl ? kompetisi.emblemUrl : PLACEHOLDERIMG
-                let isTierOne = kompetisi.plan === 'TIER_ONE' 
+                let isTierOne = kompetisi.plan === 'TIER_ONE'
                 let link = `href="klub.html?id=${kompetisi.id}&kompNama=${kompetisi.name}"`
                 let badge = `<span class="badge badge-info">PREMIUM</span>`
                 htmlContent +=
@@ -113,7 +115,7 @@
             // Hilangkan spinner dari tampilan
             document.getElementById("spinner-liga").classList.replace("d-flex", "d-none")
         }
-    });
+    }
 </script>
 
 <script src="assets/js/getNavbar.js"></script>
