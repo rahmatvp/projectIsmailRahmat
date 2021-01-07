@@ -97,7 +97,7 @@
             objGroupByNegara[kodeNegara].forEach(kompetisi => {
                 let emblem = kompetisi.emblemUrl ? kompetisi.emblemUrl : PLACEHOLDERIMG
                 let isTierOne = kompetisi.plan === 'TIER_ONE' 
-                let link = `href="klub.html?id=${kompetisi.id}&kompNama='${kompetisi.name}"`
+                let link = `href="klub.html?id=${kompetisi.id}&kompNama=${kompetisi.name}"`
                 let badge = `<span class="badge badge-info">PREMIUM</span>`
                 htmlContent +=
                     `<div class="card-body">
