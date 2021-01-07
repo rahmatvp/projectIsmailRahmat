@@ -25,11 +25,11 @@
 </head>
 
 <body>
+    <div class="blue text-light font-awide">
+        <h3 id="judul-sambutan" class="p-2 text-center">Loading...</h3>
+    </div>
     <div class="container">
         <div class="d-flex flex-column">
-            <div class="blue text-light mt-4 fs-4 font-awide">
-                <h3 class="p-2 text-center">Liga Sepakbola</h3>
-            </div>
             <div id="spinner-liga" class="d-flex justify-content-center mt-2">
                 <div class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
@@ -114,6 +114,7 @@
             $("#collapse").append(kartu)
             // Hilangkan spinner dari tampilan
             document.getElementById("spinner-liga").classList.replace("d-flex", "d-none")
+            document.getElementById("judul-sambutan").innerHTML = "Liga Sepakbola"
         }
     }
 </script>
