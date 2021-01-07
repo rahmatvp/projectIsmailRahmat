@@ -16,6 +16,11 @@
             flex-basis: 50px;
         }
 
+        .wh-30px {
+            width: 30px;
+            height: 30px;
+        }
+
         @media (min-width: 576px) {
             .w-sm-50 {
                 width: 50%;
@@ -29,6 +34,24 @@
         Loading...
     </h3>
     <div class="container">
+        <div class="search-bar-utama" style="position: relative; z-index: 99;">
+            <div class="input-group">
+                <input id="search-utama" class="form-control" type="text" placeholder="Cari Nama Liga">
+                <div class="input-group-append">
+                    <button id="button-addon2" class="btn btn-primary pb-2 input-group-text" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="21px" height="21px" fill="currentColor"
+                            class="bi bi-search" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
+                            <path fill-rule="evenodd"
+                                d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="search-res" class="list-group invisible" style="position: absolute; top: 2.5rem; width: 100%;">
+            </div>
+        </div>
         <div class="d-flex flex-column">
             <div id="spinner-liga" class="d-flex justify-content-center mt-2">
                 <div class="spinner-border" role="status">
@@ -70,40 +93,39 @@
         // Kategorisasi setiap kompetisi dalam property negara
         let objGroupByNegara = {}
         competitions.forEach(negara => {
-            let kodeNegara = negara.area.name
-            !objGroupByNegara[kodeNegara] && (objGroupByNegara[kodeNegara] = []);
-            objGroupByNegara[kodeNegara].push(negara);
+            let namaNegara = negara.area.name
+            !objGroupByNegara[namaNegara] && (objGroupByNegara[namaNegara] = []);
+            objGroupByNegara[namaNegara].push(negara);
         })
         // Buatkan accordion bootstrap
-        let j = 0;
-        for (const kodeNegara in objGroupByNegara) {
-            j++;
+        for (const namaNegara in objGroupByNegara) {
             let kartu = templateKartuNegara.content.firstElementChild.cloneNode(true);
-            let urlBendera = objGroupByNegara[kodeNegara][0].area.ensignUrl
+            let urlBendera = objGroupByNegara[namaNegara][0].area.ensignUrl
+            let idNegara = objGroupByNegara[namaNegara][0].area.id
             let bendera = urlBendera ? urlBendera : PLACEHOLDERIMG
             // Kepala accordion-nya
             let headingCard = kartu.querySelector("#heading-card")
-            headingCard.id = `heading${j}`
+            headingCard.id = `heading-${idNegara}`
             headingCard.innerHTML =
-                `<button class="btn flex-grow-1 d-flex justify-content-center" type="button" data-toggle="collapse" data-target="#collapse${j}" aria-expanded="true" aria-controls="collapse${j}" id="judulnegara">
+                `<button id="judul-negara-${idNegara}" class="btn flex-grow-1 d-flex justify-content-center" type="button" data-toggle="collapse" data-target="#collapse-${idNegara}" aria-expanded="true" aria-controls="collapse-${idNegara}">
                     <div class="d-flex justify-content-start w-sm-50">
                         <div class="d-flex justify-content-center rounded-circle overflow-hidden wh-50px mr-2">
                             <img src="${bendera}" class="h-100">
                         </div>
-                        <span class="align-self-center text-wrap">${kodeNegara}</span>
+                        <span class="align-self-center text-wrap">${namaNegara}</span>
                     </div>
                 </button>`
             // Konten accordion-nya ketika kepala accrodion di-click
             let htmlContent =
-                `<div id="collapse${j}" class="collapse" aria-labelledby="heading${j}" data-parent="#collapse">`
-            objGroupByNegara[kodeNegara].forEach(kompetisi => {
+                `<div id="collapse-${idNegara}" class="collapse" aria-labelledby="heading-${idNegara}" data-parent="#collapse">`
+            objGroupByNegara[namaNegara].forEach(kompetisi => {
                 let emblem = kompetisi.emblemUrl ? kompetisi.emblemUrl : PLACEHOLDERIMG
                 let isTierOne = kompetisi.plan === 'TIER_ONE'
                 let link = `href="klub.html?id=${kompetisi.id}&kompNama=${kompetisi.name}"`
                 let badge = `<span class="badge badge-info">PREMIUM</span>`
                 htmlContent +=
-                    `<div class="card-body">
-                        <img src="${emblem}" class="mr-2 wh-50px"> 
+                    `<div id="card-${kompetisi.id}" class="card-body">
+                        <img src="${emblem}" class="mr-2 wh-50px">
                         <a ${isTierOne ? link : ''}>${kompetisi.name} ${isTierOne ? '' : badge}</a>
                     </div>`
             });
@@ -117,6 +139,46 @@
             document.getElementById("judul-sambutan").innerHTML = "Liga Sepakbola"
         }
     }
+
+    const searchField = document.getElementById("search-utama")
+    const searchRes = document.getElementById("search-res")
+    // Buat overlay supaya seluruh body gelap ketika keyup
+    let searchBgOverlay = document.createElement("div")
+    searchBgOverlay.className = "modal d-none"
+    searchBgOverlay.style.backgroundColor = "black"
+    searchBgOverlay.style.opacity = "0.4"
+    searchBgOverlay.style.zIndex = 90
+    document.body.appendChild(searchBgOverlay)
+
+    searchField.addEventListener("keyup", e => {
+        let regExp = new RegExp(e.target.value)
+        searchRes.classList.remove("invisible")
+        searchBgOverlay.classList.replace("d-none", "d-block")
+        searchRes.innerHTML = ``
+        competitions.filter(itm => {
+            return regExp.test(itm.name.toLowerCase());
+        }).forEach(res => {
+            let hasil = document.createElement("a")
+            hasil.href = `#heading-${res.area.id}`
+            let badge = `<span class="badge badge-info">PREMIUM</span>`
+            hasil.className = "list-group-item list-group-item-action d-flex"
+            hasil.innerHTML +=
+                `<img src="${res.emblemUrl ? res.emblemUrl : PLACEHOLDERIMG}" class="mr-2 wh-30px">
+                <span class="d-inline-block align-self-center text-truncate">${res.name}</span>
+                <div>${res.plan === 'TIER_ONE' ? '' : badge}</div>`
+            hasil.addEventListener("click", () => {
+                console.log($(`#collapse-${res.area.id}`).collapse('show'))
+            })
+            searchRes.appendChild(hasil)
+        })
+    })
+
+    searchField.addEventListener("blur", () => {
+        setTimeout(() => {
+            searchRes.classList.add("invisible")
+            searchBgOverlay.classList.replace("d-block", "d-none")
+        }, 200)
+    })
 </script>
 
 <script src="assets/js/getNavbar.js"></script>
