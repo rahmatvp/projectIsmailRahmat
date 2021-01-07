@@ -25,9 +25,9 @@
 </head>
 
 <body>
-    <div class="blue text-light font-awide">
-        <h3 id="judul-sambutan" class="p-2 text-center">Loading...</h3>
-    </div>
+    <h3 id="judul-sambutan" class="p-2 blue text-light font-awide">
+        Loading...
+    </h3>
     <div class="container">
         <div class="d-flex flex-column">
             <div id="spinner-liga" class="d-flex justify-content-center mt-2">
@@ -64,7 +64,7 @@
         , headers: {
             'X-Auth-Token': TOKENFD
         }
-    }).then(res => res.json()).then(({ competitions: c }) => {competitions = c; appendElms(c);});
+    }).then(res => res.json()).then(({ competitions: c }) => { competitions = c; appendElms(c); });
 
     function appendElms(competitions) {
         // Kategorisasi setiap kompetisi dalam property negara
