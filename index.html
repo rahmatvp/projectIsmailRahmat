@@ -52,7 +52,7 @@
 
 <script>
     const templateKartuNegara = document.getElementById("kartu-negara")
-    
+
     const TOKENFD = '128ecf8248de4be8a6e6178a4548b3a4'
     const PLACEHOLDERIMG = "assets/img/Icon.png"
 
@@ -69,10 +69,8 @@
         let objGroupByNegara = {}
         competitions.forEach(negara => {
             let kodeNegara = negara.area.name
-            if (negara.plan == 'TIER_ONE') {
-                !objGroupByNegara[kodeNegara] && (objGroupByNegara[kodeNegara] = []);
-                objGroupByNegara[kodeNegara].push(negara);
-            }
+            !objGroupByNegara[kodeNegara] && (objGroupByNegara[kodeNegara] = []);
+            objGroupByNegara[kodeNegara].push(negara);
         })
         // Buatkan accordion bootstrap
         let j = 0;
@@ -98,10 +96,13 @@
                 `<div id="collapse${j}" class="collapse" aria-labelledby="heading${j}" data-parent="#collapse">`
             objGroupByNegara[kodeNegara].forEach(kompetisi => {
                 let emblem = kompetisi.emblemUrl ? kompetisi.emblemUrl : PLACEHOLDERIMG
+                let isTierOne = kompetisi.plan === 'TIER_ONE' 
+                let link = `href="klub.html?id=${kompetisi.id}&kompNama='${kompetisi.name}"`
+                let badge = `<span class="badge badge-info">PREMIUM</span>`
                 htmlContent +=
                     `<div class="card-body">
                         <img src="${emblem}" class="mr-2 wh-50px"> 
-                        <a href="klub.html?id=${kompetisi.id}&kompNama=${kompetisi.name}">${kompetisi.name}</a>
+                        <a ${isTierOne ? link : ''}>${kompetisi.name} ${isTierOne ? '' : badge}</a>
                     </div>`
             });
             htmlContent += `</div>`
