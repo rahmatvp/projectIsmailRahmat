@@ -270,7 +270,7 @@
 
             let arr = [
                 d.firstName
-                , d.lastName
+                , d.lastName ? d.lastName : d.name
                 , d.position
                 , `${d.dateOfBirth} (${d.countryOfBirth})`
                 , d.nationality
